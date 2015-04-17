@@ -13,7 +13,7 @@ describe("Computer", function() {
 
   it("should run scripts", function() {
     computer.run(script);
-    expect(computer.running).toEqual(script);
+    expect(computer.activeScript).toEqual(script);
   });
 
   it("should make progress on scripts", function() {

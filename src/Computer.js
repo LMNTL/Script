@@ -1,5 +1,5 @@
 function Computer() {
-  this.running = null;
+  this.activeScript = null;
   this.progress = 0;
   this.state = {
     enableGUI: true
@@ -7,7 +7,7 @@ function Computer() {
 }
 
 Computer.prototype.run = function(script) {
-  this.running = script;
+  this.activeScript = script;
   this.progress = 0;
 };
 Computer.prototype.stop = function() {
@@ -15,10 +15,10 @@ Computer.prototype.stop = function() {
 };
 
 Computer.prototype.step = function(duration) {
-  if(this.running != null) {
+  if(this.activeScript != null) {
     this.progress += duration;
-    if(this.progress >= this.running.runtime) {
-      this.running.complete(this);
+    if(this.progress >= this.activeScript.runtime) {
+      this.activeScript.complete(this);
       this.stop();
     }
   }

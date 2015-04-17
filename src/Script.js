@@ -5,4 +5,4 @@ function Script(config) {
 
 Script.prototype.complete = function(computer) {
   this.events.emit("complete", computer);
-}
+};
