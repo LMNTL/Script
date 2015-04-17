@@ -1,6 +1,9 @@
 function Computer() {
   this.running = null;
   this.progress = 0;
+  this.state = {
+    enableGUI: true
+  };
 }
 
 Computer.prototype.run = function(script) {
@@ -14,5 +17,9 @@ Computer.prototype.stop = function() {
 Computer.prototype.step = function(duration) {
   if(this.running != null) {
     this.progress += duration;
+    if(this.progress >= this.running.runtime) {
+      this.running.complete(this);
+      this.stop();
+    }
   }
 };
