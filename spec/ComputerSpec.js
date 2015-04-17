@@ -26,4 +26,16 @@ describe("Computer", function() {
     space.step(0.1);
     expect(computer.progress).toEqual(0);
   });
+
+  it("should queue scripts", function() {
+    script.runtime = 1;
+    var script2 = new Script({
+      runtime: 2
+    });
+    computer.enqueue(script);
+    expect(computer.activeScript).toEqual(script);
+    computer.enqueue(script2);
+    space.step(1);
+    expect(computer.activeScript).toEqual(script2);
+  });
 });
