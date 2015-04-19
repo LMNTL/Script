@@ -8,7 +8,6 @@ describe("Computer", function() {
     computer = new Computer();
     script = new Script();
     space.devices.push(computer);
-    space.computer = computer;
   });
 
   it("should run scripts", function() {
