@@ -2,6 +2,7 @@ function Computer() {
   this.activeScript = undefined;
   this.progress = 0;
   this.queue = [];
+  this.connectedTo = [];
   this.state = {
     enableGUI: true
   };
@@ -36,4 +37,8 @@ Computer.prototype.runQueue = function() {
     var script = this.queue.shift();
     this.run(script);
   }
+};
+
+Computer.prototype.connectTo = function(other) {
+
 };

@@ -1,5 +1,6 @@
-describe("Computer", function() {
-  var space
+describe("Network", function() {
+  var space;
+  var network;
   var computer;
   var script;
 
@@ -7,6 +8,7 @@ describe("Computer", function() {
     space = new Space();
     computer = new Computer();
     script = new Script();
+    network = new Network();
     space.devices.push(computer);
     space.computer = computer;
   });
@@ -38,14 +40,4 @@ describe("Computer", function() {
     space.step(1);
     expect(computer.activeScript).toEqual(script2);
   });
-
-  // it("should connect to other computers", function() {
-  //   var computer2 = new Computer();
-  //   computer.connectTo(computer2);
-  //   expect(computer.isConnected(computer2)).toEqual(true);
-  //   expect(computer2.isConnected(computer)).toEqual(true);
-  //   computer.disconnectFrom(computer2);
-  //   expect(computer.isConnected(computer2)).toEqual(false);
-  //   expect(computer2.isConnected(computer)).toEqual(false);
-  // });
 });
