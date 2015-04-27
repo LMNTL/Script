@@ -5,11 +5,13 @@ describe("NIC", function() {
   beforeEach(function() {
     space = new Space();
     device = [
-      new Device({nic: {ip: "0.0"}}),
-      new Device({nic: {ip: "1.0"}}),
-      new Device({nic: {ip: "1.1"}}),
-      new Device({nic: {ip: "2.0"}}),
-      new Device({nic: {ip: "3.0"}})
+      new Device({nic: {ip: "0"}}),
+      new Device({nic: {ip: "1"}}),
+      new Device({nic: {ip: "2"}}),
+      new Device({nic: {ip: "3"}}),
+      new Device({nic: {ip: "4"}}),
+      new Device({nic: {ip: "5"}}),
+      new Device({nic: {ip: "6"}})
     ];
     space.devices = device;
   });
@@ -49,15 +51,121 @@ describe("NIC", function() {
     device[1].nic.connectTo(device[4]);
     device[3].nic.connectTo(device[4]);
 
-    console.log(device[0].nic.routeTo(device[4].nic.ip));
+    expect(
+      device[0].nic.routeTo(device[4].nic.ip).next.ip
+    ).toEqual(device[1].nic.ip);
+  });
+
+  it("should rebuild routes", function() {
+
+    // 0
+    // | \
+    // 2  1
+    // |  |
+    // 3  |
+    //  \ |
+    //    4
+    device[0].nic.connectTo(device[1]);
+    device[0].nic.connectTo(device[2]);
+    device[2].nic.connectTo(device[3]);
+    device[1].nic.connectTo(device[4]);
+    device[3].nic.connectTo(device[4]);
 
     expect(
-      device[0].nic.routeTo(device[4].nic.ip).next
-    ).toEqual(device[1].nic);
+      device[0].nic.routeTo(device[4].nic.ip).next.ip
+    ).toEqual(device[1].nic.ip);
 
-    // device[1].nic.disconnectFrom(device[4]);
-    // expect(
-    //   device[0].nic.routeTo(device[4].nic.ip).next
-    // ).toEqual(device[2]);
+    // 0
+    // | \
+    // 2  1
+    // |  X
+    // 3  X
+    //  \ X
+    //    4
+    device[1].nic.disconnectFrom(device[4]);
+    expect(
+      device[0].nic.routeTo(device[4].nic.ip).next.ip
+    ).toEqual(device[2].nic.ip);
+  });
+
+  it("should rebuild routes (2)", function() {
+
+    // 0
+    // | \
+    // 2  1
+    // |  | \
+    // 3  |  5
+    //  \ |  |
+    //    4  |
+    //     \ |
+    //       6
+    device[0].nic.connectTo(device[1]);
+    device[0].nic.connectTo(device[2]);
+    device[2].nic.connectTo(device[3]);
+    device[1].nic.connectTo(device[4]);
+    device[3].nic.connectTo(device[4]);
+    device[1].nic.connectTo(device[5]);
+    device[5].nic.connectTo(device[6]);
+    device[4].nic.connectTo(device[6]);
+
+    expect(
+      device[0].nic.routeTo(device[6].nic.ip).next.ip
+    ).toEqual(device[1].nic.ip);
+
+    // 0
+    // | \
+    // 2  1
+    // |  X \
+    // 3  X  5
+    //  \ X  |
+    //    4  |
+    //     \ |
+    //       6
+    device[1].nic.disconnectFrom(device[4]);
+    expect(
+      device[0].nic.routeTo(device[6].nic.ip).next.ip
+    ).toEqual(device[1].nic.ip);
+
+    // 0
+    // | \
+    // 2  1
+    // |    \
+    // 3     5
+    //  \    X
+    //    4  X
+    //     \ X
+    //       6
+    device[5].nic.disconnectFrom(device[6]);
+    expect(
+      device[0].nic.routeTo(device[6].nic.ip).next.ip
+    ).toEqual(device[2].nic.ip);
+
+    // 0
+    // | \
+    // 2  1
+    // X    \
+    // 3     5
+    //  \     
+    //    4   
+    //     \  
+    //       6
+    device[2].nic.disconnectFrom(device[3]);
+    expect(
+      device[0].nic.routeTo(device[6].nic.ip)
+    ).toEqual(undefined);
+
+    // 0
+    // | \
+    // 2  1
+    //      \
+    // 3     5
+    //  \    *
+    //    4  *
+    //     \ *
+    //       6
+    device[5].nic.connectTo(device[6]);
+    expect(
+      device[0].nic.routeTo(device[6].nic.ip).next.ip
+    ).toEqual(device[1].nic.ip);
   });
 });

@@ -6,6 +6,11 @@ function NIC(device, config) {
 
   this.connectedTo = [];
   this.routes = {};
+  this.routes[this.ip] = {
+    destination: this.ip,
+    next: this,
+    distance: 0
+  };
 }
 
 NIC.prototype.step = function(duration) {
@@ -36,6 +41,13 @@ NIC.prototype.disconnectFrom = function(other) {
 
 NIC.prototype.disconnectCore = function(other) {
   _.remove(this.connectedTo, other);
+
+  var xthis = this;
+  _.each(this.routes, function(route) {
+    if(route.next == other) {
+      xthis.destroyRoute(route);
+    }
+  });
 };
 
 NIC.prototype.isConnected = function(other) {
@@ -44,7 +56,7 @@ NIC.prototype.isConnected = function(other) {
 
 NIC.prototype.propagateRoute = function(route) {
   var prevRoute = this.routes[route.destination];
-  if (!prevRoute || prevRoute.distance > route.distance) {
+  if (!prevRoute || prevRoute.distance >= route.distance) {
     this.routes[route.destination] = route;
 
     var xthis = this;
@@ -59,26 +71,26 @@ NIC.prototype.propagateRoute = function(route) {
   }
 };
 
+NIC.prototype.destroyRoute = function(route) {
+  var prevRoute = this.routes[route.destination];
+  if (prevRoute) {
+    if (prevRoute.next == route.next) {
+      delete this.routes[route.destination];
+
+      var xthis = this;
+
+      _.each(this.connectedTo, function(device) {
+        device.destroyRoute({
+          destination: route.destination,
+          next: xthis
+        });
+      });
+    } else {
+      this.propagateRoute(prevRoute);
+    }
+  }
+};
+
 NIC.prototype.routeTo = function(ip) {
   return this.routes[ip];
-  // if (ip == this.ip) {
-  //   return {
-  //     next: this.computer,
-  //     distance: 0
-  //   };
-  // }
-  // var best = this.routes[ip];
-  // if (!best) {
-  //   _.each(this.connectedTo, function(device) {
-  //     var route = device.routeTo(ip);
-  //     if (!best || route.distance + 1 < best.distance) {
-  //       best = {
-  //         next: device,
-  //         distance: route.distance + 1
-  //       };
-  //     }
-  //   });
-  //   this.routes[ip] = best;
-  // }
-  // return best;
 };
