@@ -14,10 +14,10 @@ describe("Script", function() {
       runtime: 1
     });
     script.events.on("complete", function(computer) {
-      computer.state.enableGUI = false;
+      computer.cpu.state.enableGUI = false;
     });
-    computer.run(script);
+    computer.cpu.run(script);
     space.step(1);
-    expect(computer.state.enableGUI).toEqual(false);
+    expect(computer.cpu.state.enableGUI).toEqual(false);
   });
 });
