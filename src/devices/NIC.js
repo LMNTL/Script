@@ -11,11 +11,40 @@ function NIC(device, config) {
     next: this,
     distance: 0
   };
+
+  this.queue = [];
+  this.nextQueue = [];
 }
 
+// ***********
+// * PACKETS *
+// ***********
+
 NIC.prototype.step = function(duration) {
+  var xthis = this;
+
+  _.each(this.queue, function(packet) {
+    if(packet.destination == xthis.ip) {
+      // handle packet
+    } else {
+      var route = xthis.routeTo(packet.destination);
+      if(route) {
+        route.next.enqueue(packet);
+      }
+    }
+  });
+
+  this.queue = this.nextQueue;
+  this.nextQueue = [];
 };
 
+NIC.prototype.enqueue = function(packet) {
+  this.nextQueue.push(packet);
+};
+
+// ***************
+// * CONNECTIONS *
+// ***************
 NIC.prototype.connectTo = function(other) {
   other.nic.connectCore(this);
   this.connectCore(other.nic);
@@ -54,6 +83,9 @@ NIC.prototype.isConnected = function(other) {
   return _.contains(this.connectedTo, other.nic);
 };
 
+// **********
+// * ROUTES *
+// **********
 NIC.prototype.propagateRoute = function(route) {
   var prevRoute = this.routes[route.destination];
   if (!prevRoute || prevRoute.distance >= route.distance) {
