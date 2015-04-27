@@ -3,6 +3,6 @@ function Script(config) {
   _.assign(this, config);
 }
 
-Script.prototype.complete = function(computer) {
-  this.events.emit("complete", computer);
+Script.prototype.complete = function(device) {
+  this.events.emit("complete", device);
 };

@@ -1,6 +1,6 @@
-function CPU(computer) {
-  this.computer = computer;
-  computer.components.push(this);
+function CPU(device) {
+  this.device = device;
+  device.components.push(this);
 
   this.activeScript = undefined;
   this.progress = 0;
@@ -22,7 +22,7 @@ CPU.prototype.step = function(duration) {
   if(!_.isUndefined(this.activeScript)) {
     this.progress += duration;
     if(this.progress >= this.activeScript.runtime) {
-      this.activeScript.complete(this.computer);
+      this.activeScript.complete(this.device);
       this.runQueue();
     }
   }

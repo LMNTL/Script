@@ -1,6 +1,6 @@
-function NIC(computer) {
-  this.computer = computer;
-  computer.components.push(this);
+function NIC(device) {
+  this.device = device;
+  device.components.push(this);
 
   this.connectedTo = [];
 }
