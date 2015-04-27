@@ -2,8 +2,8 @@ function Space() {
   this.devices = [];
 }
 
-Space.prototype.step = function(duration) {
+Space.prototype.step = function() {
   _.each(this.devices, function(device) {
-    device.step(duration)
+    device.step()
   });
 };

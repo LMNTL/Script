@@ -16,13 +16,14 @@ describe("CPU", function() {
   });
 
   it("should make progress on scripts", function() {
-    space.step(0.1);
+    script.runtime = 2;
+    space.step();
     expect(device.cpu.progress).toEqual(0);
     device.cpu.run(script);
-    space.step(0.1);
-    expect(device.cpu.progress).toEqual(0.1);
+    space.step();
+    expect(device.cpu.progress).toEqual(1);
     device.cpu.stop();
-    space.step(0.1);
+    space.step();
     expect(device.cpu.progress).toEqual(0);
   });
 
@@ -34,7 +35,7 @@ describe("CPU", function() {
     device.cpu.enqueue(script);
     expect(device.cpu.activeScript).toEqual(script);
     device.cpu.enqueue(script2);
-    space.step(1);
+    space.step();
     expect(device.cpu.activeScript).toEqual(script2);
   });
 
@@ -46,7 +47,7 @@ describe("CPU", function() {
       device.cpu.state.enableGUI = false;
     });
     device.cpu.run(script);
-    space.step(1);
+    space.step();
     expect(device.cpu.state.enableGUI).toEqual(false);
   });
 });

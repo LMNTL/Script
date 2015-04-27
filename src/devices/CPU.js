@@ -20,9 +20,9 @@ CPU.prototype.stop = function() {
   this.run(undefined);
 };
 
-CPU.prototype.step = function(duration) {
+CPU.prototype.step = function() {
   if(!_.isUndefined(this.activeScript)) {
-    this.progress += duration;
+    this.progress ++;
     if(this.progress >= this.activeScript.runtime) {
       this.activeScript.complete(this.device);
       this.runQueue();
