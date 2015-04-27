@@ -1,6 +1,8 @@
-function CPU(device) {
+function CPU(device, config) {
   this.device = device;
   device.components.push(this);
+
+  _.assign(this, config);
 
   this.activeScript = undefined;
   this.progress = 0;

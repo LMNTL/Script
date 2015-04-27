@@ -1,8 +1,8 @@
-function Device() {
+function Device(config) {
   this.components = [];
 
-  this.cpu = new CPU(this);
-  this.nic = new NIC(this);
+  this.cpu = new CPU(this, config.cpu);
+  this.nic = new NIC(this, config.nic);
 }
 
 Device.prototype.step = function(duration) {

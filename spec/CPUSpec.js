@@ -5,7 +5,7 @@ describe("CPU", function() {
 
   beforeEach(function() {
     space = new Space();
-    device = new Device();
+    device = new Device({});
     script = new Script();
     space.devices.push(device);
   });

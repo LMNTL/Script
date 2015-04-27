@@ -1,8 +1,11 @@
-function NIC(device) {
+function NIC(device, config) {
   this.device = device;
   device.components.push(this);
 
+  _.assign(this, config);
+
   this.connectedTo = [];
+  this.routes = {};
 }
 
 NIC.prototype.step = function(duration) {
@@ -16,8 +19,15 @@ NIC.prototype.connectTo = function(other) {
 NIC.prototype.connectCore = function(other) {
   if(!_.contains(this.connectedTo, other)) {
     this.connectedTo.push(other);
+
+    this.propagateRoute({
+      destination: other.ip,
+      next: other,
+      distance: 1
+    });
   }
 };
+
 
 NIC.prototype.disconnectFrom = function(other) {
   other.nic.disconnectCore(this);
@@ -30,4 +40,45 @@ NIC.prototype.disconnectCore = function(other) {
 
 NIC.prototype.isConnected = function(other) {
   return _.contains(this.connectedTo, other.nic);
+};
+
+NIC.prototype.propagateRoute = function(route) {
+  var prevRoute = this.routes[route.destination];
+  if (!prevRoute || prevRoute.distance > route.distance) {
+    this.routes[route.destination] = route;
+
+    var xthis = this;
+
+    _.each(this.connectedTo, function(device) {
+      device.propagateRoute({
+        destination: route.destination,
+        next: xthis,
+        distance: route.distance + 1
+      });
+    });
+  }
+};
+
+NIC.prototype.routeTo = function(ip) {
+  return this.routes[ip];
+  // if (ip == this.ip) {
+  //   return {
+  //     next: this.computer,
+  //     distance: 0
+  //   };
+  // }
+  // var best = this.routes[ip];
+  // if (!best) {
+  //   _.each(this.connectedTo, function(device) {
+  //     var route = device.routeTo(ip);
+  //     if (!best || route.distance + 1 < best.distance) {
+  //       best = {
+  //         next: device,
+  //         distance: route.distance + 1
+  //       };
+  //     }
+  //   });
+  //   this.routes[ip] = best;
+  // }
+  // return best;
 };
