@@ -10,6 +10,7 @@ function CPU(device, config) {
   this.state = {
     enableGUI: true
   };
+  this.events = new Events();
 }
 
 CPU.prototype.run = function(script) {
@@ -24,7 +25,9 @@ CPU.prototype.step = function() {
   if(!_.isUndefined(this.activeScript)) {
     this.progress ++;
     if(this.progress >= this.activeScript.runtime) {
-      this.activeScript.complete(this.device);
+      if(this.activeScript.complete) {
+        this.activeScript.complete(this.device, this.activeScript);
+      }
       this.runQueue();
     }
   }
@@ -40,5 +43,7 @@ CPU.prototype.runQueue = function() {
   if(this.queue.length > 0) {
     var script = this.queue.shift();
     this.run(script);
+  } else {
+    this.stop();
   }
 };

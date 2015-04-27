@@ -41,10 +41,10 @@ describe("CPU", function() {
 
   it("should complete scripts", function() {
     var script = new Script({
-      runtime: 1
-    });
-    script.events.on("complete", function(device) {
-      device.cpu.state.enableGUI = false;
+      runtime: 1,
+      complete: function(device) {
+        device.cpu.state.enableGUI = false;
+      }
     });
     device.cpu.run(script);
     space.step();

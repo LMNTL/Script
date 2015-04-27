@@ -34,7 +34,7 @@ describe("Packet", function() {
     packet = new Packet({
       destination: device[4].nic.ip
     });
-    device[0].nic.enqueue(packet);
+    device[0].nic.send(packet);
 
     space.step();
     space.step();
@@ -43,5 +43,81 @@ describe("Packet", function() {
     expect(
       _.contains(device[4].nic.queue, packet)
     ).toEqual(true);
+  });
+
+  it("should trigger a response", function() {
+    // 0
+    // | \
+    // 2  1
+    // |  |
+    // 3  |
+    //  \ |
+    //    4
+    device[0].nic.connectTo(device[1]);
+    device[0].nic.connectTo(device[2]);
+    device[2].nic.connectTo(device[3]);
+    device[1].nic.connectTo(device[4]);
+    device[3].nic.connectTo(device[4]);
+
+    var serverScript = new Script({
+      complete: function(server, script) {
+        server.cpu.events.on("packet", function(request) {
+          if(request.protocol == 'request') {
+            server.cpu.enqueue(new Script({
+              complete: function() {
+                console.log(request.source);
+                server.nic.send(new Packet({
+                  destination: request.source,
+                  protocol: 'response',
+                  data: {
+                    respondingTo: request,
+                    response: script.data.response[request.data.request]
+                  }
+                }));
+              }
+            }));
+          }
+        });
+      },
+      data: {
+        response: {
+          '/': 'Welcome to Globa Search!'
+        }
+      }
+    });
+
+    device[4].cpu.enqueue(serverScript);
+
+    var browserScript = new Script({
+      complete: function(computer) {
+        computer.cpu.events.on("packet", function(response) {
+          console.log(request.source);
+          if(request.protocol == 'response') {
+            server.cpu.enqueue(new Script({
+              complete: function() {
+                computer.gui.display(response);
+              }
+            }));
+          }
+        });
+        computer.nic.send(new Packet({
+          destination: device[4].nic.ip,
+          protocol: 'request',
+          data: {
+            request: '/'
+          }
+        }));
+      }
+    });
+
+    device[0].cpu.enqueue(browserScript);
+
+    for (var i = 0; i < 200; i++) {
+      space.step();
+    }
+
+    expect(
+      device[0].gui.displaying
+    ).toEqual('Welcome to Globa Search!');
   });
 });
