@@ -40,11 +40,11 @@ describe("Computer", function() {
 
   it("should connect to other computers", function() {
     var computer2 = new Computer();
-    computer.connectTo(computer2);
-    expect(computer.isConnected(computer2)).toEqual(true);
-    expect(computer2.isConnected(computer)).toEqual(true);
-    computer.disconnectFrom(computer2);
-    expect(computer.isConnected(computer2)).toEqual(false);
-    expect(computer2.isConnected(computer)).toEqual(false);
+    computer.nic.connectTo(computer2);
+    expect(computer.nic.isConnected(computer2)).toEqual(true);
+    expect(computer2.nic.isConnected(computer)).toEqual(true);
+    computer.nic.disconnectFrom(computer2);
+    expect(computer.nic.isConnected(computer2)).toEqual(false);
+    expect(computer2.nic.isConnected(computer)).toEqual(false);
   });
 });
