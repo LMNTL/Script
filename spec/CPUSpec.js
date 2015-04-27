@@ -1,4 +1,4 @@
-describe("Computer", function() {
+describe("CPU", function() {
   var space
   var computer;
   var script;
@@ -38,13 +38,15 @@ describe("Computer", function() {
     expect(computer.cpu.activeScript).toEqual(script2);
   });
 
-  it("should connect to other computers", function() {
-    var computer2 = new Computer();
-    computer.nic.connectTo(computer2);
-    expect(computer.nic.isConnected(computer2)).toEqual(true);
-    expect(computer2.nic.isConnected(computer)).toEqual(true);
-    computer.nic.disconnectFrom(computer2);
-    expect(computer.nic.isConnected(computer2)).toEqual(false);
-    expect(computer2.nic.isConnected(computer)).toEqual(false);
+  it("should complete scripts", function() {
+    var script = new Script({
+      runtime: 1
+    });
+    script.events.on("complete", function(computer) {
+      computer.cpu.state.enableGUI = false;
+    });
+    computer.cpu.run(script);
+    space.step(1);
+    expect(computer.cpu.state.enableGUI).toEqual(false);
   });
 });
