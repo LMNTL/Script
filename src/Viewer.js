@@ -18,12 +18,12 @@ Viewer.prototype.render = function(canvas, ctx, aniStep) {
 	});
 
 	_.each(this.space.devices, function(device) {
-		ctx.drawImage(img.computer, device.position.x - 12, device.position.y - 37);
+		ctx.drawImage(img[device.type], device.position.x - 12, device.position.y - 37);
 		ctx.fillText(device.nic.ip, device.position.x + 13, device.position.y + 13);
 	});
 
 	_.each(this.space.devices, function(device) {
-		_.each(device.nic.nextQueue, function(packet) {
+		_.each(device.nic.queue, function(packet) {
 			var device2 = device.nic.routeTo(packet.destination).next.device;
 			if (device2 && device2.position) {
 				ctx.beginPath();
@@ -40,21 +40,29 @@ Viewer.prototype.render = function(canvas, ctx, aniStep) {
 
 
 var img = [];
-img.computer = new Image();
-img.computer.src = 'images/computer.png';
+
+_.each([
+		'terminal',
+		'router',
+		'rackServer'
+	], function(type) {
+		var image = new Image();
+		image.src = 'images/' + type + '.png';
+		img[type] = image;
+	});
 
 $(document).ready(function() {
 	var space = new Space();
 	var viewer = new Viewer(space);
 
   device = [
-    new Device({nic: {ip: "0"}, position: {x:  60, y:  60}}),
-    new Device({nic: {ip: "1"}, position: {x: 160, y:  60}}),
-    new Device({nic: {ip: "2"}, position: {x:  60, y: 160}}),
-    new Device({nic: {ip: "3"}, position: {x:  60, y: 260}}),
-    new Device({nic: {ip: "4"}, position: {x: 160, y: 160}}),
-    new Device({nic: {ip: "5"}, position: {x: 260, y: 160}}),
-    new Device({nic: {ip: "6"}, position: {x: 260, y: 260}})
+    new Device.terminal   ({nic: {ip: "0"}, position: {x:  60, y:  60}}),
+    new Device.router     ({nic: {ip: "1"}, position: {x: 160, y:  60}}),
+    new Device.router     ({nic: {ip: "2"}, position: {x:  60, y: 160}}),
+    new Device.router     ({nic: {ip: "3"}, position: {x:  60, y: 260}}),
+    new Device.rackServer ({nic: {ip: "4"}, position: {x: 160, y: 160}}),
+    new Device.rackServer ({nic: {ip: "5"}, position: {x: 260, y: 160}}),
+    new Device.terminal   ({nic: {ip: "6"}, position: {x: 260, y: 260}})
   ];
   space.devices = device;
 
