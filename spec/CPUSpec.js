@@ -58,4 +58,12 @@ describe("CPU", function() {
     space.step();
     expect(device.cpu.activeScript).toEqual(script2);
   });
+
+  it("should have a memory capacity", function() {
+    device.cpu.memory = 2;
+    device.cpu.enqueue(script);
+    device.cpu.enqueue(script);
+    device.cpu.enqueue(script);
+    expect(device.cpu.queue.length).toEqual(2);
+  });
 });

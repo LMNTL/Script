@@ -3,6 +3,7 @@ function CPU(device, config) {
   device.components.push(this);
 
   this.speed = 1;
+  this.memory = 5;
 
   _.assign(this, config);
 
@@ -40,5 +41,7 @@ CPU.prototype.stepCore = function() {
 };
 
 CPU.prototype.enqueue = function(script) {
-  this.queue.push(script);
+  if(this.queue.length < this.memory) {
+    this.queue.push(script);
+  }
 };
