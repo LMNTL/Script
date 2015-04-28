@@ -64,6 +64,7 @@ NIC.prototype.connectCore = function(other) {
   if(!_.contains(this.connectedTo, other)) {
     this.connectedTo.push(other);
 
+    this.propagateAllRoutes(other);
     this.propagateRoute({
       destination: other.ip,
       next: other,
@@ -96,6 +97,18 @@ NIC.prototype.isConnected = function(other) {
 // **********
 // * ROUTES *
 // **********
+NIC.prototype.propagateAllRoutes = function(other) {
+  var xthis = this;
+
+  _.each(this.routes, function(route) {
+    other.propagateRoute({
+      destination: route.destination,
+      next: xthis,
+      distance: route.distance + 1
+    });
+  });
+};
+
 NIC.prototype.propagateRoute = function(route) {
   var prevRoute = this.routes[route.destination];
   if (!prevRoute || prevRoute.distance >= route.distance) {

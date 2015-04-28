@@ -69,10 +69,7 @@ describe("Packet", function() {
                 server.nic.send(new Packet({
                   destination: request.source,
                   protocol: 'response',
-                  data: {
-                    respondingTo: request,
-                    response: script.data.response[request.data.request]
-                  }
+                  data: script.data.response[request.data]
                 }));
               }
             }));
@@ -91,11 +88,11 @@ describe("Packet", function() {
     var browserScript = new Script({
       complete: function(computer) {
         computer.cpu.events.on("packet", function(response) {
-          console.log(request.source);
-          if(request.protocol == 'response') {
-            server.cpu.enqueue(new Script({
+          console.log(response);
+          if(response.protocol == 'response') {
+            computer.cpu.enqueue(new Script({
               complete: function() {
-                computer.gui.display(response);
+                computer.gui.display(response.data);
               }
             }));
           }
@@ -103,9 +100,7 @@ describe("Packet", function() {
         computer.nic.send(new Packet({
           destination: device[4].nic.ip,
           protocol: 'request',
-          data: {
-            request: '/'
-          }
+          data: '/'
         }));
       }
     });
