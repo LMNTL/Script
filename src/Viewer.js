@@ -24,16 +24,13 @@ Viewer.prototype.render = function(canvas, ctx, aniStep) {
 
 	_.each(this.space.devices, function(device) {
 		_.each(device.nic.queue, function(packet, index) {
-			var pos = aniStep; //(aniStep - index / device.nic.queue.length);
-			if(pos > 0) {
-				var device2 = device.nic.routeTo(packet.destination).next.device;
-				if (device2 && device2.position && device2 != device) {
-					ctx.drawImage(
-						img.packet,
-						device.position.x * (1 - pos) + device2.position.x * pos - 12,
-						device.position.y * (1 - pos) + device2.position.y * pos - 42
-					);
-				}
+			var device2 = device.nic.routeTo(packet.destination).next.device;
+			if (device2 && device2.position && device2 != device) {
+				ctx.drawImage(
+					img.packet,
+					device.position.x * (1 - aniStep) + device2.position.x * aniStep - 17 + index * 5,
+					device.position.y * (1 - aniStep) + device2.position.y * aniStep - 44 + index * 2  
+				);
 			}
 		});
 	});
@@ -44,25 +41,21 @@ Viewer.prototype.render = function(canvas, ctx, aniStep) {
 		ctx.fillText(device.nic.ip, device.position.x + 13, device.position.y + 13);
 		var steps = 0;
 		ctx.fillStyle = "#0026FF";
-		for(var i = 0; i < device.cpu.queue.length; i ++) {
+		for(var i = 0; i < device.cpu.queue.length && i < 5; i ++) {
 			var script = device.cpu.queue[i];
-			renderScriptQueue(script, steps, i == 0 ? aniStep : 0, device, ctx);
+			renderScriptQueue(script, steps, device, ctx);
 			steps += script.runtime;
 		}
 	});
 }
 
-function renderScriptQueue(script, steps, aniStep, device, ctx) {
+function renderScriptQueue(script, steps, device, ctx) {
 	var start = steps;
-	var end = script.runtime;
-	if (end > 5) {
-		end = 5;
-	}
 	ctx.fillRect(
-		device.position.x + 13 + start * 5, 
-		device.position.y + 15 + aniStep * 10,
-		end * 5 - 2,
-		10 - aniStep * 10
+		device.position.x + 20 + start * 5, 
+		device.position.y - 15,
+		3,
+		10
 	);
 }
 
@@ -92,7 +85,8 @@ $(document).ready(function() {
     new Device({nic: {ip: "3"}, position: {x: 160, y: 160}, type: 'router'}),
     new Device({nic: {ip: "4"}, position: {x: 260, y: 160}, type: 'rackServer', 
     	cpu: {capacity: 2}}),
-    new Device({nic: {ip: "5"}, position: {x: 160, y:  60}, type: 'terminal'})
+    new Device({nic: {ip: "5"}, position: {x: 160, y:  60}, type: 'terminal'}),
+    new Device({nic: {ip: "6"}, position: {x: 160, y: 260}, type: 'terminal'})
   ];
   space.devices = device;
 
@@ -108,6 +102,7 @@ $(document).ready(function() {
   device[2].nic.connectTo(device[3]);	
   device[3].nic.connectTo(device[4]);
   device[5].nic.connectTo(device[3]);
+  device[6].nic.connectTo(device[3]);
 
   var serverScript = new Script({
     complete: function(server, script) {
@@ -158,8 +153,9 @@ $(document).ready(function() {
     }
   });
 
-  device[0].cpu.enqueue(browserScript);
-  device[5].cpu.enqueue(browserScript);
+  //device[0].cpu.enqueue(browserScript);
+  //device[5].cpu.enqueue(browserScript);
+  //device[6].cpu.enqueue(browserScript);
 
 	var canvas = document.getElementById('canvas');
 	if (canvas.getContext) {
@@ -168,20 +164,22 @@ $(document).ready(function() {
 	  var aniStep = 0;
 	  var simStep = 0;
 	  setInterval(function() {
-	  	aniStep += 0.1;
+      aniStep += 0.1;
 	  	if(aniStep >= 1) {
 	  		space.step(1);
 	  		simStep ++;
-	  		console.log(device[0].cpu.queue);
-	  		if(simStep % 2 == 0) {
-	  			if(device[0].cpu.queue.length == 0) {
+	  		//if(simStep % 2 == 0) {
+	  			if(device[0].cpu.queue.length < 2) {
 	  				device[0].cpu.enqueue(browserRequestScript);
 	  			}
-		  		if(device[5].cpu.queue.length == 0) {
-	  				device[5].cpu.enqueue(browserRequestScript);
-		  		}
-		  	}
-	  		aniStep = 0;
+          if(device[5].cpu.queue.length < 2) {
+            device[5].cpu.enqueue(browserRequestScript);
+          }
+          if(device[6].cpu.queue.length < 2) {
+            device[6].cpu.enqueue(browserRequestScript);
+          }
+		  	//}
+	  		aniStep -= 1;
 	  	}
 	  	viewer.render(canvas, ctx, aniStep);
 	  }, 100)
