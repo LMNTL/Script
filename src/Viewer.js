@@ -4,9 +4,9 @@ function Viewer (space) {
 }
 
 Viewer.prototype.render = function(canvas, ctx, aniStep) {
-	var my_gradient=ctx.createLinearGradient(0,0,0,canvas.height);
-	my_gradient.addColorStop(0,"#AAA");
-	my_gradient.addColorStop(1,"#666");
+	var my_gradient=ctx.createLinearGradient(canvas.width,0,0,canvas.height);
+	my_gradient.addColorStop(1,"#AAA");
+	my_gradient.addColorStop(0,"#666");
 	ctx.fillStyle=my_gradient;
 	ctx.fillRect(0, 0, canvas.width, canvas.height);
 
