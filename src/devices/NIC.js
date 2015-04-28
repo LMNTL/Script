@@ -20,7 +20,7 @@ function NIC(device, config) {
 // * PACKETS *
 // ***********
 
-NIC.prototype.step = function(duration) {
+NIC.prototype.outerStep = function(duration) {
   var xthis = this;
 
   _.each(this.queue, function(packet) {
@@ -33,7 +33,8 @@ NIC.prototype.step = function(duration) {
       }
     }
   });
-
+};
+NIC.prototype.innerStep = function() {
   this.queue = this.nextQueue;
   this.nextQueue = [];
 };

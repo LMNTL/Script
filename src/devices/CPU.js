@@ -13,11 +13,13 @@ function CPU(device, config) {
 }
 
 
-CPU.prototype.step = function() {
+CPU.prototype.innerStep = function() {
   for(var i = 0; i < this.capacity; i++) {
     this.stepCore();
   }
-}
+};
+CPU.prototype.outerStep = function() {};
+
 CPU.prototype.stepCore = function() {
   if(!this.activeScript) {
     this.activeScript = this.queue[0];

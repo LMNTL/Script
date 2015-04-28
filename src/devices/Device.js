@@ -9,9 +9,14 @@ function Device(config) {
   this.gpu = new GPU(this, config.gpu);
 }
 
-Device.prototype.step = function(duration) {
+Device.prototype.innerStep = function(duration) {
   _.each(this.components, function (component) {
-    component.step(duration);
+    component.innerStep(duration);
+  });
+};
+Device.prototype.outerStep = function(duration) {
+  _.each(this.components, function (component) {
+    component.outerStep(duration);
   });
 };
 

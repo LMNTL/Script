@@ -11,4 +11,6 @@ GPU.prototype.display = function(content) {
   this.displaying = content;
 };
 
-GPU.prototype.step = function() {};
+GPU.prototype.innerStep = function() {};
+
+GPU.prototype.outerStep = function() {};

@@ -4,6 +4,9 @@ function Space() {
 
 Space.prototype.step = function() {
   _.each(this.devices, function(device) {
-    device.step()
+    device.innerStep();
+  });
+  _.each(this.devices, function(device) {
+    device.outerStep();
   });
 }
