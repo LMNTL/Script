@@ -1,5 +1,8 @@
+
 function Device(config) {
   this.components = [];
+
+  _.assign(this, config);
 
   this.cpu = new CPU(this, config.cpu);
   this.nic = new NIC(this, config.nic);

@@ -6,4 +6,4 @@ Space.prototype.step = function() {
   _.each(this.devices, function(device) {
     device.step()
   });
-};
+}
