@@ -10,7 +10,7 @@ Viewer.prototype.render = function(canvas, ctx, aniStep) {
 	ctx.fillStyle=my_gradient;
 	ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-	ctx.fillStyle = "#000";
+  ctx.strokeStyle = "#000";
 	_.each(this.space.devices, function(device) {
 		_.each(device.nic.connectedTo, function(nic2) {
 			var device2 = nic2.device;
@@ -39,21 +39,51 @@ Viewer.prototype.render = function(canvas, ctx, aniStep) {
 		ctx.fillStyle = "#000";
 		ctx.drawImage(img[device.type], device.position.x - 12, device.position.y - 42);
 		ctx.fillText(device.nic.ip, device.position.x + 13, device.position.y + 13);
-		var steps = 0;
+
 		ctx.fillStyle = "#0026FF";
-		for(var i = 0; i < device.cpu.queue.length && i < 5; i ++) {
-			var script = device.cpu.queue[i];
-			renderScriptQueue(script, steps, device, ctx);
-			steps += script.runtime;
+		for(var i = 0; i < device.cpu.queue.length; i ++) {
+			renderScriptQueue(i, device, ctx);
 		}
 	});
+
+  _.each(this.space.players[0].deck, function(script, index) {
+    renderFileFrame(ctx, 35 + index * 35, canvas.height - 70, 80, 120);
+    ctx.fillStyle = "#000";
+    ctx.fillText(script.name, 40 + index * 35, canvas.height - 70 + 13);
+  });
 }
 
-function renderScriptQueue(script, steps, device, ctx) {
-	var start = steps;
+function renderFileFrame(ctx, x1, y1, xs, ys) {
+  var x2 = x1 + xs;
+  var y2 = y1 + ys;
+  var cornerSize = xs / 5;
+  var x3 = x2 - cornerSize;
+  var y3 = y1 + cornerSize;
+
+  ctx.fillStyle = "#FFC";
+  ctx.beginPath();
+  ctx.moveTo(x1, y1);
+  ctx.lineTo(x3, y1);
+  ctx.lineTo(x2, y3);
+  ctx.lineTo(x2, y2);
+  ctx.lineTo(x1, y2);
+  ctx.closePath();
+  ctx.fill();
+
+  ctx.strokeStyle = "#AA8";
+  ctx.beginPath();
+  ctx.moveTo(x3, y1);
+  ctx.lineTo(x3, y3);
+  ctx.lineTo(x2, y3);
+  ctx.stroke();
+}
+
+function renderScriptQueue(i, device, ctx) {
+	var x = i % 5;
+  var y = parseInt(i / 5);
 	ctx.fillRect(
-		device.position.x + 20 + start * 5, 
-		device.position.y - 15,
+		device.position.x + 20 + x * 5, 
+		device.position.y - 15 - y * 12,
 		3,
 		10
 	);
@@ -80,15 +110,35 @@ $(document).ready(function() {
 
   device = [
     new Device({nic: {ip: "0"}, position: {x:  60, y:  60}, type: 'terminal'}),
-    new Device({nic: {ip: "1"}, position: {x:  60, y: 260}, type: 'playerTerminal'}),
+    new Device({nic: {ip: "1"}, position: {x:  60, y: 260}, type: 'playerTerminal',
+      cpu: {speed: 2, memory: 10}}),
     new Device({nic: {ip: "2"}, position: {x:  60, y: 160}, type: 'router'}),
     new Device({nic: {ip: "3"}, position: {x: 160, y: 160}, type: 'router'}),
     new Device({nic: {ip: "4"}, position: {x: 260, y: 160}, type: 'rackServer', 
-    	cpu: {speed: 2}}),
+    	cpu: {speed: 2, memory: 10}}),
     new Device({nic: {ip: "5"}, position: {x: 160, y:  60}, type: 'terminal'}),
     new Device({nic: {ip: "6"}, position: {x: 160, y: 260}, type: 'terminal'})
   ];
   space.devices = device;
+
+  player = [
+    new Player({
+      deck: [
+        new Script({
+          name: 'DoS Attack',
+          complete: function(computer, script) {
+            computer.nic.send(new Packet({
+              destination: device[4].nic.ip,
+              protocol: 'request',
+              data: '/'
+            }));
+            computer.cpu.enqueue(script);
+          }
+        })
+      ]
+    })
+  ]
+  space.players = player;
 
   // 0
   // | \
@@ -153,9 +203,9 @@ $(document).ready(function() {
     }
   });
 
-  //device[0].cpu.enqueue(browserScript);
-  //device[5].cpu.enqueue(browserScript);
-  //device[6].cpu.enqueue(browserScript);
+  device[0].cpu.enqueue(browserScript);
+  device[5].cpu.enqueue(browserScript);
+  device[6].cpu.enqueue(browserScript);
 
 	var canvas = document.getElementById('canvas');
 	if (canvas.getContext) {
@@ -177,6 +227,9 @@ $(document).ready(function() {
           }
           if(device[6].cpu.queue.length < 2) {
             device[6].cpu.enqueue(browserRequestScript);
+          }
+          while(device[1].cpu.queue.length < 5) {
+            device[1].cpu.enqueue(browserRequestScript);
           }
 		  	//}
 	  		aniStep -= 1;
