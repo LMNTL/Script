@@ -25,13 +25,13 @@ CPU.prototype.stepCore = function() {
   }
   if (this.activeScript) {
     this.progress ++;
-    if(this.progress > this.activeScript.runtime) {
+    if(this.progress >= this.activeScript.runtime) {
       if(this.activeScript.complete) {
         this.activeScript.complete(this.device, this.activeScript);
       }
 
       this.queue.shift();
-      this.activeScript = undefined;
+      this.activeScript = this.queue[0];
       this.progress = 0;
     }
   }

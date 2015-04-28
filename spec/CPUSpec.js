@@ -11,28 +11,24 @@ describe("CPU", function() {
   });
 
   it("should run scripts", function() {
-    device.cpu.run(script);
-    expect(device.cpu.activeScript).toEqual(script);
-  });
-
-  it("should make progress on scripts", function() {
     script.runtime = 2;
     space.step();
     expect(device.cpu.progress).toEqual(0);
-    device.cpu.run(script);
+    device.cpu.enqueue(script);
     space.step();
     expect(device.cpu.progress).toEqual(1);
-    device.cpu.stop();
+    space.step();
     space.step();
     expect(device.cpu.progress).toEqual(0);
   });
 
   it("should queue scripts", function() {
-    script.runtime = 1;
+    script.runtime = 2;
     var script2 = new Script({
-      runtime: 2
+      runtime: 1
     });
     device.cpu.enqueue(script);
+    space.step();
     expect(device.cpu.activeScript).toEqual(script);
     device.cpu.enqueue(script2);
     space.step();
@@ -46,7 +42,7 @@ describe("CPU", function() {
         device.gpu.display('Script done!');
       }
     });
-    device.cpu.run(script);
+    device.cpu.enqueue(script);
     space.step();
     expect(device.gpu.displaying).toEqual('Script done!');
   });
