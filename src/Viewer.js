@@ -90,7 +90,9 @@ $(document).ready(function() {
     new Device({nic: {ip: "1"}, position: {x:  60, y: 260}, type: 'playerTerminal'}),
     new Device({nic: {ip: "2"}, position: {x:  60, y: 160}, type: 'router'}),
     new Device({nic: {ip: "3"}, position: {x: 160, y: 160}, type: 'router'}),
-    new Device({nic: {ip: "4"}, position: {x: 260, y: 160}, type: 'rackServer'})
+    new Device({nic: {ip: "4"}, position: {x: 260, y: 160}, type: 'rackServer', 
+    	cpu: {capacity: 2}}),
+    new Device({nic: {ip: "5"}, position: {x: 160, y:  60}, type: 'terminal'})
   ];
   space.devices = device;
 
@@ -105,6 +107,7 @@ $(document).ready(function() {
   device[0].nic.connectTo(device[2]);
   device[2].nic.connectTo(device[3]);	
   device[3].nic.connectTo(device[4]);
+  device[5].nic.connectTo(device[3]);
 
   var serverScript = new Script({
     complete: function(server, script) {
@@ -156,6 +159,7 @@ $(document).ready(function() {
   });
 
   device[0].cpu.enqueue(browserScript);
+  device[5].cpu.enqueue(browserScript);
 
 	var canvas = document.getElementById('canvas');
 	if (canvas.getContext) {
@@ -169,9 +173,14 @@ $(document).ready(function() {
 	  		space.step(1);
 	  		simStep ++;
 	  		console.log(device[0].cpu.queue);
-	  		if(simStep % 2 == 0 && device[0].cpu.queue.length == 0) {
-  				device[0].cpu.enqueue(browserRequestScript);
-	  		}
+	  		if(simStep % 2 == 0) {
+	  			if(device[0].cpu.queue.length == 0) {
+	  				device[0].cpu.enqueue(browserRequestScript);
+	  			}
+		  		if(device[5].cpu.queue.length == 0) {
+	  				device[5].cpu.enqueue(browserRequestScript);
+		  		}
+		  	}
 	  		aniStep = 0;
 	  	}
 	  	viewer.render(canvas, ctx, aniStep);

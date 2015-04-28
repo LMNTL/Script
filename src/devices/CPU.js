@@ -2,6 +2,8 @@ function CPU(device, config) {
   this.device = device;
   device.components.push(this);
 
+  this.capacity = 1;
+
   _.assign(this, config);
 
   this.activeScript = undefined;
@@ -12,6 +14,11 @@ function CPU(device, config) {
 
 
 CPU.prototype.step = function() {
+  for(var i = 0; i < this.capacity; i++) {
+    this.stepCore();
+  }
+}
+CPU.prototype.stepCore = function() {
   if(!this.activeScript) {
     this.activeScript = this.queue[0];
     this.progress = 0;
