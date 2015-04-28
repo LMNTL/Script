@@ -65,7 +65,6 @@ describe("Packet", function() {
           if(request.protocol == 'request') {
             server.cpu.enqueue(new Script({
               complete: function() {
-                console.log(request.source);
                 server.nic.send(new Packet({
                   destination: request.source,
                   protocol: 'response',
@@ -88,7 +87,6 @@ describe("Packet", function() {
     var browserScript = new Script({
       complete: function(computer) {
         computer.cpu.events.on("packet", function(response) {
-          console.log(response);
           if(response.protocol == 'response') {
             computer.cpu.enqueue(new Script({
               complete: function() {

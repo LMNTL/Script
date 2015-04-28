@@ -24,12 +24,10 @@ NIC.prototype.step = function(duration) {
   var xthis = this;
 
   _.each(this.queue, function(packet) {
-    console.log(xthis.ip, packet);
     if(packet.destination == xthis.ip) {
       xthis.device.cpu.events.emit("packet", packet);
     } else {
       var route = xthis.routeTo(packet.destination);
-      console.log(route);
       if(route) {
         route.next.enqueue(packet);
       }
@@ -45,7 +43,6 @@ NIC.prototype.send = function(packet) {
     packet.source = this.ip;
   }
   this.enqueue(packet);
-  console.log(packet);
 };
 
 NIC.prototype.enqueue = function(packet) {
