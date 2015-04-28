@@ -19,12 +19,12 @@ Viewer.prototype.render = function(canvas, ctx, aniStep) {
 
 	_.each(this.space.devices, function(device) {
 		ctx.drawImage(img.computer, device.position.x - 12, device.position.y - 37);
+		ctx.fillText(device.nic.ip, device.position.x + 13, device.position.y + 13);
 	});
 
 	_.each(this.space.devices, function(device) {
 		_.each(device.nic.nextQueue, function(packet) {
 			var device2 = device.nic.routeTo(packet.destination).next.device;
-			console.log(device2);
 			if (device2 && device2.position) {
 				ctx.beginPath();
 				ctx.arc(
