@@ -8,7 +8,7 @@ function CPU(device, config) {
   this.progress = 0;
   this.queue = [];
   this.state = {
-    enableGUI: true
+    enableGPU: true
   };
   this.events = new Events();
 }

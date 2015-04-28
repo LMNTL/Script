@@ -43,11 +43,11 @@ describe("CPU", function() {
     var script = new Script({
       runtime: 1,
       complete: function(device) {
-        device.cpu.state.enableGUI = false;
+        device.cpu.state.enableGPU = false;
       }
     });
     device.cpu.run(script);
     space.step();
-    expect(device.cpu.state.enableGUI).toEqual(false);
+    expect(device.cpu.state.enableGPU).toEqual(false);
   });
 });

@@ -1,4 +1,4 @@
-function GUI(device, config) {
+function GPU(device, config) {
   this.device = device;
   device.components.push(this);
 
@@ -7,8 +7,8 @@ function GUI(device, config) {
   this.displaying = '';
 }
 
-GUI.prototype.display = function(content) {
+GPU.prototype.display = function(content) {
   this.displaying = content;
 };
 
-GUI.prototype.step = function() {};
+GPU.prototype.step = function() {};

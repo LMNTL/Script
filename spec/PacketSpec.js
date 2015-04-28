@@ -92,7 +92,7 @@ describe("Packet", function() {
           if(response.protocol == 'response') {
             computer.cpu.enqueue(new Script({
               complete: function() {
-                computer.gui.display(response.data);
+                computer.gpu.display(response.data);
               }
             }));
           }
@@ -112,7 +112,7 @@ describe("Packet", function() {
     }
 
     expect(
-      device[0].gui.displaying
+      device[0].gpu.displaying
     ).toEqual('Welcome to Globa Search!');
   });
 });
