@@ -2,7 +2,7 @@ function CPU(device, config) {
   this.device = device;
   device.components.push(this);
 
-  this.capacity = 1;
+  this.speed = 1;
 
   _.assign(this, config);
 
@@ -14,7 +14,7 @@ function CPU(device, config) {
 
 
 CPU.prototype.innerStep = function() {
-  for(var i = 0; i < this.capacity; i++) {
+  for(var i = 0; i < this.speed; i++) {
     this.stepCore();
   }
 };

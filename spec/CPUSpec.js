@@ -46,4 +46,16 @@ describe("CPU", function() {
     space.step();
     expect(device.gpu.displaying).toEqual('Script done!');
   });
+
+  it("should have a processing speed", function() {
+    device.cpu.speed = 2;
+    script.runtime = 2;
+    var script2 = new Script({
+      runtime: 1
+    });
+    device.cpu.enqueue(script);
+    device.cpu.enqueue(script2);
+    space.step();
+    expect(device.cpu.activeScript).toEqual(script2);
+  });
 });

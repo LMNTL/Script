@@ -84,7 +84,7 @@ $(document).ready(function() {
     new Device({nic: {ip: "2"}, position: {x:  60, y: 160}, type: 'router'}),
     new Device({nic: {ip: "3"}, position: {x: 160, y: 160}, type: 'router'}),
     new Device({nic: {ip: "4"}, position: {x: 260, y: 160}, type: 'rackServer', 
-    	cpu: {capacity: 2}}),
+    	cpu: {speed: 2}}),
     new Device({nic: {ip: "5"}, position: {x: 160, y:  60}, type: 'terminal'}),
     new Device({nic: {ip: "6"}, position: {x: 160, y: 260}, type: 'terminal'})
   ];
