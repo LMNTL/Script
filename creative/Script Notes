@@ -1,0 +1,17 @@
+
+Server script
+	repeat
+		|><| A = waitForPacket()
+		 |_| B = file(A.data)
+					   sendPacket(A.source, 'response', B)
+
+Browser script
+	repeat
+		  <> A = randomServer()
+						 sendPacket(A, 'request', '/')
+		|><| B = waitForPacket()
+						 render(B.data)
+
+DoS script
+	repeat
+						 sendPacket('4', 'request', '/')
