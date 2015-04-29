@@ -147,7 +147,7 @@ $(document).ready(function() {
   // 3  |
   //  \ |
   //    4
-  device[0].nic.connectTo(device[1]);
+  device[2].nic.connectTo(device[1]);
   device[0].nic.connectTo(device[2]);
   device[2].nic.connectTo(device[3]);	
   device[3].nic.connectTo(device[4]);
@@ -206,6 +206,7 @@ $(document).ready(function() {
   device[0].cpu.enqueue(browserScript);
   device[5].cpu.enqueue(browserScript);
   device[6].cpu.enqueue(browserScript);
+  device[1].cpu.enqueue(browserScript);
 
 	var canvas = document.getElementById('canvas');
 	if (canvas.getContext) {
@@ -228,9 +229,9 @@ $(document).ready(function() {
           if(device[6].cpu.queue.length < 2) {
             device[6].cpu.enqueue(browserRequestScript);
           }
-          while(device[1].cpu.queue.length < 5) {
-            device[1].cpu.enqueue(browserRequestScript);
-          }
+          // while(device[1].cpu.queue.length < 2) {
+          //   device[1].cpu.enqueue(browserRequestScript);
+          // }
 		  	//}
 	  		aniStep -= 1;
 	  	}
