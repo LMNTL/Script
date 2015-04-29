@@ -7,10 +7,8 @@ function CPU(device, config) {
 
   _.assign(this, config);
 
-  this.activeScript = undefined;
-  this.progress = 0;
+  this.active = undefined;
   this.queue = [];
-  this.events = new Events();
 }
 
 
