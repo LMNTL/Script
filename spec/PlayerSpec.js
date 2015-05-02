@@ -26,4 +26,9 @@ describe("Player", function() {
     space.step();
     expect(device.gpu.displaying).toEqual('Script done!');
   });
+  
+  it("should be running an admin device", function () {
+    expect(player.device.admin).toEqual(true);
+  });
+  
 });
