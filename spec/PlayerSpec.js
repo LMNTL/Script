@@ -11,7 +11,7 @@ describe("Player", function() {
     game.devices.push(device);
     player = new Player({
       deck: [script],
-      device: device
+      primaryDevice: device
     });
     device.owner = player;
   });
@@ -24,7 +24,7 @@ describe("Player", function() {
   });
   
   it("should be running an admin device", function () {
-    expect(player.device.owner).toEqual(player);
+    expect(player.primaryDevice.owner).toEqual(player);
   });
   
 });

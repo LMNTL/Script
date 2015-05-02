@@ -11,3 +11,7 @@ Game.prototype.step = function() {
     device.outerStep();
   });
 }
+
+Game.prototype.gameOver = function () {
+  this.activeGame = false;
+};

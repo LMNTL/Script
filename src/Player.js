@@ -1,11 +1,11 @@
 function Player(config) {
   _.assign(this, config);
 
-  if(this.device) {
-    this.device.admin = true;
+  if(this.primaryDevice) {
+    this.primaryDevice.changeOwner(this);
   }
 }
 
 Player.prototype.run = function run(script) {
-  this.device.cpu.enqueue(script);
+  this.primaryDevice.cpu.enqueue(script);
 };

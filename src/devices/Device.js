@@ -20,17 +20,9 @@ Device.prototype.outerStep = function(duration) {
   });
 };
 
-Device.terminal = function(config) {
-	config.type = "terminal";
-	return new Device(config);
-}
-
-Device.router = function(config) {
-	config.type = "router";
-	return new Device(config);
-}
-
-Device.rackServer = function(config) {
-	config.type = "rackServer";
-	return new Device(config);
-}
+Device.prototype.changeOwner = function (newOwner) {
+  if (this.owner && this.owner.primaryDevice === this && newOwner !== this.owner) {
+    this.game.gameOver();
+  }
+  this.owner = newOwner;
+};

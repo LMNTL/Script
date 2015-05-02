@@ -6,12 +6,12 @@ describe("Game", function() {
 
   beforeEach(function() {
     game = new Game();
-    device = new Device({});
+    device = new Device({game: game});
     script = new Script();
     game.devices.push(device);
     player = new Player({
       deck: [script],
-      device: device
+      primaryDevice: device
     });
   });
 
@@ -21,7 +21,8 @@ describe("Game", function() {
   it("should end game when player loses control of their computer", function() {
     var player2 = new Player({});
     expect(game.activeGame).toEqual(true);
-    player.device.changeOwner(player2);
+    player.primaryDevice.changeOwner(player2);
+    expect(device.owner).toEqual(player2);
     expect(game.activeGame).toEqual(false);
   });
 });
