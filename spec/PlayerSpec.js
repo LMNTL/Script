@@ -16,8 +16,14 @@ describe("Player", function() {
   });
 
   it("should run scripts", function() {
+    var script = new Script({
+      runtime: 1,
+      complete: function(device) {
+        device.gpu.display('Script done!');
+      }
+    });
     player.run(script);
     space.step();
-    expect(device.cpu.activeScript).toEqual(script);
+    expect(device.gpu.displaying).toEqual('Script done!');
   });
 });
