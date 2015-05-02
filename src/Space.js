@@ -1,5 +1,6 @@
 function Space() {
   this.devices = [];
+  this.activeGame = true;
 }
 
 Space.prototype.step = function() {

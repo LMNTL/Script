@@ -23,7 +23,7 @@ describe("Player", function() {
   });
   
   it("should be running an admin device", function () {
-    expect(player.device.admin).toEqual(true);
+    expect(player.device.owner).toEqual(player);
   });
   
 });
