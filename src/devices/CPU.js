@@ -25,6 +25,7 @@ CPU.prototype.stepCore = function() {
     this.progress = 0;
   }
   if (this.active) {
+    console.log(this.active);
     this.active.step();
     if(this.active.complete) {
       this.queue.shift();
@@ -47,5 +48,6 @@ CPU.prototype.enqueue = function(scriptInstance) {
   if(this.queue.length < this.memory) {
     scriptInstance.device = this.device;
     this.queue.push(scriptInstance);
+    console.log(scriptInstance.device);
   }
 };

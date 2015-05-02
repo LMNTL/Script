@@ -27,6 +27,7 @@ new Script({
 	name: 'displayText',
 	parameters: [{name: 'A', type: 'text'}],
 	step: function(instance) {
+		console.log(instance);
 		instance.device.gpu.display(instance.variables['A']);
     instance.complete = true;
 	}

@@ -6,7 +6,7 @@ describe("CPU", function() {
   beforeEach(function() {
     space = new Space();
     device = new Device({});
-    script = new Script();
+    script = Script.get("displayText")
     space.devices.push(device);
   });
 
@@ -24,15 +24,14 @@ describe("CPU", function() {
 
   it("should queue scripts", function() {
     script.runtime = 2;
-    var script2 = new Script({
-      runtime: 1
-    });
-    device.cpu.enqueue(script);
+    var script2 = Script.get("displayText");
+    var scriptInstance1 = script.instance(['meow'])
+    device.cpu.enqueue(scriptInstance1);
+    expect(device.cpu.queue[0]).toEqual(scriptInstance1);
+    scriptInstance2 = script2.instance(['quack'])
+    device.cpu.enqueue(scriptInstance2);
     space.step();
-    expect(device.cpu.activeScript).toEqual(script);
-    device.cpu.enqueue(script2);
-    space.step();
-    expect(device.cpu.activeScript).toEqual(script2);
+    expect(device.cpu.active).toEqual(scriptInstance2);
   });
 
   it("should complete scripts", function() {
