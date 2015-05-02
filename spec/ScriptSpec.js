@@ -12,9 +12,7 @@ describe("Script", function() {
     var script = Script.get("displayText");
     device.cpu.enqueue(script.instance(['success!']));
     expect(device.cpu.queue[0].variables).toEqual({'A': 'success!'});
-    for(var i = 0; i < 1000; i ++) {
-      game.step();
-    }
+    game.step();
     expect(device.gpu.displaying).toEqual('success!');
   });
 });
