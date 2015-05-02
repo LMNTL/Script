@@ -16,6 +16,6 @@ describe("Player", function() {
   });
 
   it("should be active", function() {
-    expect.game.activeGame = true;
+    expect(game.activeGame).toEqual(true);
   });
 });
