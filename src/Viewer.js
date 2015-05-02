@@ -1,6 +1,6 @@
 
-function Viewer (space) {
-	this.space = space;
+function Viewer (game) {
+	this.game = game;
 }
 
 Viewer.prototype.render = function(canvas, ctx, aniStep) {
@@ -11,7 +11,7 @@ Viewer.prototype.render = function(canvas, ctx, aniStep) {
 	ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   ctx.strokeStyle = "#000";
-	_.each(this.space.devices, function(device) {
+	_.each(this.game.devices, function(device) {
 		_.each(device.nic.connectedTo, function(nic2) {
 			var device2 = nic2.device;
 
@@ -22,7 +22,7 @@ Viewer.prototype.render = function(canvas, ctx, aniStep) {
 		});
 	});
 
-	_.each(this.space.devices, function(device) {
+	_.each(this.game.devices, function(device) {
 		_.each(device.nic.queue, function(packet, index) {
 			var device2 = device.nic.routeTo(packet.destination).next.device;
 			if (device2 && device2.position && device2 != device) {
@@ -35,7 +35,7 @@ Viewer.prototype.render = function(canvas, ctx, aniStep) {
 		});
 	});
 
-	_.each(this.space.devices, function(device) {
+	_.each(this.game.devices, function(device) {
 		ctx.fillStyle = "#000";
 		ctx.drawImage(img[device.type], device.position.x - 12, device.position.y - 42);
 		ctx.fillText(device.nic.ip, device.position.x + 13, device.position.y + 13);
@@ -46,7 +46,7 @@ Viewer.prototype.render = function(canvas, ctx, aniStep) {
 		}
 	});
 
-  _.each(this.space.players[0].deck, function(script, index) {
+  _.each(this.game.players[0].deck, function(script, index) {
     renderFileFrame(ctx, 35 + index * 35, canvas.height - 70, 80, 120);
     ctx.fillStyle = "#000";
     ctx.fillText(script.name, 40 + index * 35, canvas.height - 70 + 13);
@@ -105,8 +105,8 @@ _.each([
 	});
 
 $(document).ready(function() {
-	var space = new Space();
-	var viewer = new Viewer(space);
+	var game = new Game();
+	var viewer = new Viewer(game);
 
   device = [
     new Device({nic: {ip: "0"}, position: {x:  60, y:  60}, type: 'terminal'}),
@@ -119,7 +119,7 @@ $(document).ready(function() {
     new Device({nic: {ip: "5"}, position: {x: 160, y:  60}, type: 'terminal'}),
     new Device({nic: {ip: "6"}, position: {x: 160, y: 260}, type: 'terminal'})
   ];
-  space.devices = device;
+  game.devices = device;
 
   player = [
     new Player({
@@ -139,7 +139,7 @@ $(document).ready(function() {
       ]
     })
   ]
-  space.players = player;
+  game.players = player;
 
   // 0
   // | \
@@ -231,7 +231,7 @@ $(document).ready(function() {
 	  setInterval(function() {
       aniStep += 0.1;
 	  	if(aniStep >= 1) {
-	  		space.step(1);
+	  		game.step(1);
 	  		simStep ++;
 	  		//if(simStep % 2 == 0) {
 	  			if(device[0].cpu.queue.length < 2) {

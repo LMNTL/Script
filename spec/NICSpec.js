@@ -1,9 +1,9 @@
 describe("NIC", function() {
-  var space;
+  var game;
   var device;
 
   beforeEach(function() {
-    space = new Space();
+    game = new Game();
     device = [
       new Device({nic: {ip: "0"}}),
       new Device({nic: {ip: "1"}}),
@@ -13,7 +13,7 @@ describe("NIC", function() {
       new Device({nic: {ip: "5"}}),
       new Device({nic: {ip: "6"}})
     ];
-    space.devices = device;
+    game.devices = device;
   });
 
   it("should connect to other devices", function() {

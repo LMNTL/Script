@@ -1,14 +1,14 @@
 describe("device", function () {
-	var space;
+	var game;
 	var device;
 	var script;
 	var player;
 
 	beforeEach(function () {
-		space = new Space();
+		game = new Game();
 		device = new Device({});
 		script = new Script();
-		space.devices.push(device);
+		game.devices.push(device);
 		player = new Player({
 			deck: [script],
 			device: device

@@ -1,9 +1,9 @@
-function Space() {
+function Game() {
   this.devices = [];
   this.activeGame = true;
 }
 
-Space.prototype.step = function() {
+Game.prototype.step = function() {
   _.each(this.devices, function(device) {
     device.innerStep();
   });
