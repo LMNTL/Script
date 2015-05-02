@@ -20,26 +20,32 @@ CPU.prototype.innerStep = function() {
 CPU.prototype.outerStep = function() {};
 
 CPU.prototype.stepCore = function() {
-  if(!this.activeScript) {
-    this.activeScript = this.queue[0];
+  if(!this.active) {
+    this.active = this.queue[0];
     this.progress = 0;
   }
-  if (this.activeScript) {
-    this.progress ++;
-    if(this.progress >= this.activeScript.runtime) {
-      if(this.activeScript.complete) {
-        this.activeScript.complete(this.device, this.activeScript);
-      }
-
+  if (this.active) {
+    this.active.step();
+    if(this.active.complete) {
       this.queue.shift();
-      this.activeScript = this.queue[0];
-      this.progress = 0;
+      this.active = this.queue[0];
     }
+    // this.progress ++;
+    // if(this.progress >= this.active.runtime) {
+    //   if(this.active.complete) {
+    //     this.active.complete(this.device, this.active);
+    //   }
+
+    //   this.queue.shift();
+    //   this.active = this.queue[0];
+    //   this.progress = 0;
+    // }
   }
 };
 
-CPU.prototype.enqueue = function(script) {
+CPU.prototype.enqueue = function(scriptInstance) {
   if(this.queue.length < this.memory) {
-    this.queue.push(script);
+    scriptInstance.device = this.device;
+    this.queue.push(scriptInstance);
   }
 };

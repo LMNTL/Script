@@ -17,16 +17,17 @@ Script.prototype.instance = function(parameters) {
 	var variables = _.zipObject(_.map(_.zip(parameters, this.parameters), function(param){
 		return [param[1].name, param[0]];
 	}));
-	return {
+	return new ScriptInstance({
 		script: this,
 		variables: variables
-	}
+	});
 }
 
 new Script({
 	name: 'displayText',
 	parameters: [{name: 'A', type: 'text'}],
-	action: function(instance) {
-		instance.computer.gpu.display(instance.variables['A']);
+	step: function(instance) {
+		instance.device.gpu.display(instance.variables['A']);
+    instance.complete = true;
 	}
 });

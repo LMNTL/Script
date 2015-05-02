@@ -59,7 +59,14 @@ describe("Packet", function() {
     device[1].nic.connectTo(device[4]);
     device[3].nic.connectTo(device[4]);
 
-    var serverScript = new Script({
+    var serverScript = Script.composite({
+      name: "webServer",
+      steps: [
+        
+      ]
+    });
+
+
       complete: function(server, script) {
         server.cpu.events.on("packet", function(request) {
           if(request.protocol == 'request') {
