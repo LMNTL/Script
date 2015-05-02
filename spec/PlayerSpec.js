@@ -13,6 +13,7 @@ describe("Player", function() {
       deck: [script],
       device: device
     });
+    device.owner = player;
   });
 
   it("should run scripts", function() {
