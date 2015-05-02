@@ -14,6 +14,7 @@ function NIC(device, config) {
 
   this.queue = [];
   this.nextQueue = [];
+  this.pendingPackets = [];
 }
 
 // ***********
@@ -25,7 +26,7 @@ NIC.prototype.outerStep = function(duration) {
 
   _.each(this.queue, function(packet) {
     if(packet.destination == xthis.ip) {
-      xthis.device.cpu.events.emit("packet", packet);
+      xthis.pendingPackets.push(packet);
     } else {
       var route = xthis.routeTo(packet.destination);
       if(route) {

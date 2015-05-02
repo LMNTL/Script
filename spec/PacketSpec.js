@@ -17,54 +17,54 @@ describe("Packet", function() {
     game.devices = device;
   });
 
-  // it("should travel the network", function() {
-  //   // 0
-  //   // | \
-  //   // 2  1
-  //   // |  |
-  //   // 3  |
-  //   //  \ |
-  //   //    4
-  //   device[0].nic.connectTo(device[1]);
-  //   device[0].nic.connectTo(device[2]);
-  //   device[2].nic.connectTo(device[3]);
-  //   device[1].nic.connectTo(device[4]);
-  //   device[3].nic.connectTo(device[4]);
+  it("should travel the network", function() {
+    // 0
+    // | \
+    // 2  1
+    // |  |
+    // 3  |
+    //  \ |
+    //    4
+    device[0].nic.connectTo(device[1]);
+    device[0].nic.connectTo(device[2]);
+    device[2].nic.connectTo(device[3]);
+    device[1].nic.connectTo(device[4]);
+    device[3].nic.connectTo(device[4]);
 
-  //   packet = new Packet({
-  //     destination: device[4].nic.ip
-  //   });
-  //   device[0].nic.send(packet);
+    packet = new Packet({
+      destination: device[4].nic.ip
+    });
+    device[0].nic.send(packet);
 
-  //   game.step();
-  //   game.step();
-  //   game.step();
+    game.step();
+    game.step();
+    game.step();
 
-  //   expect(
-  //     _.contains(device[4].nic.queue, packet)
-  //   ).toEqual(true);
-  // });
+    expect(
+      _.contains(device[4].nic.queue, packet)
+    ).toEqual(true);
+  });
 
-  // it("should trigger a response", function() {
-  //   // 0
-  //   // | \
-  //   // 2  1
-  //   // |  |
-  //   // 3  |
-  //   //  \ |
-  //   //    4
-  //   device[0].nic.connectTo(device[1]);
-  //   device[0].nic.connectTo(device[2]);
-  //   device[2].nic.connectTo(device[3]);
-  //   device[1].nic.connectTo(device[4]);
-  //   device[3].nic.connectTo(device[4]);
+  it("should trigger a response", function() {
+    // 0
+    // | \
+    // 2  1
+    // |  |
+    // 3  |
+    //  \ |
+    //    4
+    device[0].nic.connectTo(device[1]);
+    device[0].nic.connectTo(device[2]);
+    device[2].nic.connectTo(device[3]);
+    device[1].nic.connectTo(device[4]);
+    device[3].nic.connectTo(device[4]);
 
-  //   // var serverScript = Script.composite({
-  //   //   name: "webServer",
-  //   //   steps: [
+    // var serverScript = Script.construct("repeat", [
+    //   name: "webServer",
+    //   steps: [
         
-  //   //   ]
-  //   // });
+    //   ]
+    // });
 
 
   //   //   complete: function(server, script) {
