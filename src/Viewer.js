@@ -123,6 +123,7 @@ $(document).ready(function() {
 
   player = [
     new Player({
+      device: device[1],
       deck: [
         new Script({
           name: 'DoS Attack',
@@ -209,6 +210,19 @@ $(document).ready(function() {
   device[1].cpu.enqueue(browserScript);
 
 	var canvas = document.getElementById('canvas');
+
+  canvas.addEventListener('click', function(event) {
+    var x = event.pageX - canvas.offsetLeft,
+        y = event.pageY - canvas.offsetTop;
+
+    _.each(player[0].deck, function(script, index) {
+      if (y > canvas.height - 70
+          && x > 35 + index * 35 && x < 35 + 80 + index * 35) {
+        player[0].run(script);
+      }
+    });
+  }, false);
+
 	if (canvas.getContext) {
 	  var ctx = canvas.getContext('2d');
 
