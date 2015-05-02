@@ -15,5 +15,11 @@ describe("device", function () {
 		});
 	});
 	
-	it("player device should be admin")
+	it("should change owners when chown is run", function() {
+		var player2 = new Player({});
+    var script = Script.get("chown");
+    device.cpu.enqueue(script.instance([player2]));
+    game.step();
+    expect(device.owner).toEqual(player2);
+	});
 });

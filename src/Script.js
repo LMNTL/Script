@@ -24,11 +24,19 @@ Script.prototype.instance = function(parameters) {
 }
 
 new Script({
-	name: 'displayText',
-	parameters: [{name: 'A', type: 'text'}],
-	step: function(instance) {
-		console.log(instance);
-		instance.device.gpu.display(instance.variables['A']);
+  name: 'displayText',
+  parameters: [{name: 'A', type: 'text'}],
+  step: function(instance) {
+    instance.device.gpu.display(instance.variables['A']);
     instance.complete = true;
-	}
+  }
+});
+
+new Script({
+  name: 'chown',
+  parameters: [{name: 'A', type: 'player'}],
+  step: function(instance) {
+    instance.device.changeOwner(instance.variables['A']);
+    instance.complete = true;
+  }
 });
