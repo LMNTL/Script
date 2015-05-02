@@ -1,4 +1,4 @@
-describe("Player", function() {
+describe("Game", function() {
   var game;
   var device;
   var script;
@@ -17,5 +17,11 @@ describe("Player", function() {
 
   it("should be active", function() {
     expect(game.activeGame).toEqual(true);
+  });
+  it("should end game when player loses control of their computer", function() {
+    var player2 = new Player({});
+    expect(game.activeGame).toEqual(true);
+    player.device.changeOwner(player2);
+    expect(game.activeGame).toEqual(false);
   });
 });
