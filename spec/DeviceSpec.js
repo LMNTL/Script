@@ -1,4 +1,4 @@
-describe("device", function () {
+describe("Device", function () {
 	var game;
 	var device;
 	var script;
