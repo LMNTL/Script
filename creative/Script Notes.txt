@@ -5,6 +5,47 @@ Server script
 		 |_| B = file(A.data)
 					   sendPacket(A.source, 'response', B)
 
+{
+	name: 'Server script',
+	{
+		script: "repeat", block: [
+			{
+				script: "waitForPacket", 
+				assignTo: [name: "A", type: "packet"]
+			},
+			{
+				script: "file",
+				parameters: [
+					{
+						type: "parameter", 
+						parameter: "A", 
+						dereference: "data"
+					}
+				],
+				assignTo: [name: "B", type: "file"]
+			},
+			{
+				script: "sendPacket",
+				parameters: [
+					{
+						type: "parameter", 
+						parameter: "A", 
+						dereference: "source"
+					}, 
+					{
+						type: "literal", 
+						literal: "response"
+					}, 
+					{
+						type: "parameter", 
+						parameter: "B"
+					}
+				]
+			}
+		]
+	}
+}
+
 Browser script
 	repeat
 		  <> A = randomServer()
