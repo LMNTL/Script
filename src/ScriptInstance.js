@@ -7,7 +7,7 @@ function ScriptInstance(config) {
 
 ScriptInstance.prototype.step = function() {
   this.script.step(this);
-}
+};
 
 ScriptInstance.prototype.goSub = function() {
   var instruction = this.script.instructions[this.counter];
@@ -21,4 +21,4 @@ ScriptInstance.prototype.goSub = function() {
   });
   this.sub = script.instance(parameters);
   this.sub.device = this.device;
-}
+};
