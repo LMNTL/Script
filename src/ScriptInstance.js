@@ -16,9 +16,16 @@ ScriptInstance.prototype.goSub = function() {
   var parameters = _.map(instruction.parameters, function(parameter) {
     switch(parameter.type) {
       case 'variable':
-        return xthis.variables[parameter.variable];
+        var res = xthis.variables[parameter.variable];
+        if(parameter.dereference) {
+          res = res[parameter.dereference];
+        }
+        return res;
+      case 'literal':
+        return parameter.literal;
     }
   });
+  console.log(this.variables, instruction.parameters, parameters);
   this.sub = script.instance(parameters);
   this.sub.device = this.device;
 };

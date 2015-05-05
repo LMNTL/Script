@@ -45,7 +45,7 @@ describe("Packet", function() {
     ).toEqual(true);
   });
 
-  /*it("should trigger a response", function() {
+  it("should trigger a response", function() {
     // 0
     // | \
     // 2  1
@@ -59,58 +59,71 @@ describe("Packet", function() {
     device[1].nic.connectTo(device[4]);
     device[3].nic.connectTo(device[4]);
 
-    var serverScript = Script.construct("repeat", [
-      name: "webServer",
-      steps: [
-        
+    var serverScript = new Script({
+      name: 'httpd',
+      instructions: [
+        { script: "waitForPacket",
+          assignTo: {name: "A", type: "packet"}
+        },
+        { script: "file",
+          parameters: [{
+            type: "variable", 
+            variable: "A",
+            dereference: "data"
+          }],
+          assignTo: {name: "B", type: "file"}
+        },
+        { script: "sendPacket",
+          parameters: [
+            { type: "variable", 
+              variable: "A",
+              dereference: "source"
+            },
+            { type: "literal", 
+              literal: "response"
+            }, 
+            { type: "variable", 
+              variable: "B"
+            }
+          ]
+        }
       ]
     });
 
-
-      complete: function(server, script) {
-        server.cpu.events.on("packet", function(request) {
-          if(request.protocol == 'request') {
-            server.cpu.enqueue(new Script({
-              complete: function() {
-                server.nic.send(new Packet({
-                  destination: request.source,
-                  protocol: 'response',
-                  data: script.data.response[request.data]
-                }));
-              }
-            }));
-          }
-        });
-      },
-      data: {
-        response: {
-          '/': 'Welcome to Globa Search!'
-        }
-      }
-    });
-
-    device[4].cpu.enqueue(serverScript);
+    device[4].cpu.enqueue(serverScript.instance([]));
+    device[4].disk.root.index = 'Welcome to Globa Search!';
 
     var browserScript = new Script({
-      complete: function(computer) {
-        computer.cpu.events.on("packet", function(response) {
-          if(response.protocol == 'response') {
-            computer.cpu.enqueue(new Script({
-              complete: function() {
-                computer.gpu.display(response.data);
-              }
-            }));
-          }
-        });
-        computer.nic.send(new Packet({
-          destination: device[4].nic.ip,
-          protocol: 'request',
-          data: '/'
-        }));
-      }
+      name: 'mosaic',
+      parameters: [{name: 'A', type: 'filePath'}],
+      instructions: [
+        { script: "sendPacket",
+          parameters: [
+            { type: "literal", 
+              literal: '4'
+            },
+            { type: "literal", 
+              literal: "request"
+            }, 
+            { type: "variable", 
+              variable: "A"
+            }
+          ]
+        },
+        { script: "waitForPacket",
+          assignTo: {name: "A", type: "packet"}
+        },
+        { script: "displayFile",
+          parameters: [{
+            type: "variable", 
+            variable: "A",
+            dereference: "data"
+          }]
+        }
+      ]
     });
 
-    device[0].cpu.enqueue(browserScript);
+    device[0].cpu.enqueue(browserScript.instance(['/index']));
 
     for (var i = 0; i < 200; i++) {
       game.step();
@@ -119,5 +132,5 @@ describe("Packet", function() {
     expect(
       device[0].gpu.displaying
     ).toEqual('Welcome to Globa Search!');
-  });*/
+  });
 });

@@ -34,7 +34,7 @@ Script.prototype.step = function(instance) {
     }
     instance.counter ++;
 
-    if(instance.counter > this.instructions.length) {
+    if(instance.counter >= this.instructions.length) {
       instance.complete = true;
       return;
     } else {
@@ -78,6 +78,35 @@ new Script({
   parameters: [{name: 'A', type: 'filePath'}],
   step: function(instance) {
     instance.result = instance.device.disk.get(instance.variables['A']);
+    instance.complete = true;
+  }
+});
+
+new Script({
+  name: 'waitForPacket',
+  parameters: [],
+  step: function(instance) {
+    var pendingPackets = instance.device.nic.pendingPackets;
+    if(pendingPackets.length) {
+      instance.result = pendingPackets.shift();
+      instance.complete = true;
+    }
+  }
+});
+
+new Script({
+  name: 'sendPacket',
+  parameters: [
+    {name: 'A', type: 'ip'},
+    {name: 'B', type: 'protocol'},
+    {name: 'C', type: 'data'}
+  ],
+  step: function(instance) {
+    instance.device.nic.send(new Packet({
+      destination: instance.variables['A'],
+      protocol: instance.variables['B'],
+      data: instance.variables['C']
+    }));
     instance.complete = true;
   }
 });
