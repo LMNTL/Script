@@ -45,7 +45,7 @@ describe("Packet", function() {
     ).toEqual(true);
   });
 
-  it("should trigger a response", function() {
+  /*it("should trigger a response", function() {
     // 0
     // | \
     // 2  1
@@ -59,65 +59,65 @@ describe("Packet", function() {
     device[1].nic.connectTo(device[4]);
     device[3].nic.connectTo(device[4]);
 
-    // var serverScript = Script.construct("repeat", [
-    //   name: "webServer",
-    //   steps: [
+    var serverScript = Script.construct("repeat", [
+      name: "webServer",
+      steps: [
         
-    //   ]
-    // });
+      ]
+    });
 
 
-  //   //   complete: function(server, script) {
-  //   //     server.cpu.events.on("packet", function(request) {
-  //   //       if(request.protocol == 'request') {
-  //   //         server.cpu.enqueue(new Script({
-  //   //           complete: function() {
-  //   //             server.nic.send(new Packet({
-  //   //               destination: request.source,
-  //   //               protocol: 'response',
-  //   //               data: script.data.response[request.data]
-  //   //             }));
-  //   //           }
-  //   //         }));
-  //   //       }
-  //   //     });
-  //   //   },
-  //   //   data: {
-  //   //     response: {
-  //   //       '/': 'Welcome to Globa Search!'
-  //   //     }
-  //   //   }
-  //   // });
+      complete: function(server, script) {
+        server.cpu.events.on("packet", function(request) {
+          if(request.protocol == 'request') {
+            server.cpu.enqueue(new Script({
+              complete: function() {
+                server.nic.send(new Packet({
+                  destination: request.source,
+                  protocol: 'response',
+                  data: script.data.response[request.data]
+                }));
+              }
+            }));
+          }
+        });
+      },
+      data: {
+        response: {
+          '/': 'Welcome to Globa Search!'
+        }
+      }
+    });
 
-  //   device[4].cpu.enqueue(serverScript);
+    device[4].cpu.enqueue(serverScript);
 
-  //   var browserScript = new Script({
-  //     complete: function(computer) {
-  //       computer.cpu.events.on("packet", function(response) {
-  //         if(response.protocol == 'response') {
-  //           computer.cpu.enqueue(new Script({
-  //             complete: function() {
-  //               computer.gpu.display(response.data);
-  //             }
-  //           }));
-  //         }
-  //       });
-  //       computer.nic.send(new Packet({
-  //         destination: device[4].nic.ip,
-  //         protocol: 'request',
-  //         data: '/'
-  //       }));
-  //     }
-  //   });
+    var browserScript = new Script({
+      complete: function(computer) {
+        computer.cpu.events.on("packet", function(response) {
+          if(response.protocol == 'response') {
+            computer.cpu.enqueue(new Script({
+              complete: function() {
+                computer.gpu.display(response.data);
+              }
+            }));
+          }
+        });
+        computer.nic.send(new Packet({
+          destination: device[4].nic.ip,
+          protocol: 'request',
+          data: '/'
+        }));
+      }
+    });
 
-  //   device[0].cpu.enqueue(browserScript);
+    device[0].cpu.enqueue(browserScript);
 
-  //   for (var i = 0; i < 200; i++) {
-  //     game.step();
-  //   }
+    for (var i = 0; i < 200; i++) {
+      game.step();
+    }
 
-  //   expect(
-  //     device[0].gpu.displaying
-  //   ).toEqual('Welcome to Globa Search!');
-  // });
+    expect(
+      device[0].gpu.displaying
+    ).toEqual('Welcome to Globa Search!');
+  });*/
 });
