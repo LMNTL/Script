@@ -22,25 +22,13 @@ CPU.prototype.outerStep = function() {};
 CPU.prototype.stepCore = function() {
   if(!this.active) {
     this.active = this.queue[0];
-    this.progress = 0;
   }
   if (this.active) {
-    console.log(this.active);
     this.active.step();
     if(this.active.complete) {
       this.queue.shift();
       this.active = this.queue[0];
     }
-    // this.progress ++;
-    // if(this.progress >= this.active.runtime) {
-    //   if(this.active.complete) {
-    //     this.active.complete(this.device, this.active);
-    //   }
-
-    //   this.queue.shift();
-    //   this.active = this.queue[0];
-    //   this.progress = 0;
-    // }
   }
 };
 
@@ -48,6 +36,5 @@ CPU.prototype.enqueue = function(scriptInstance) {
   if(this.queue.length < this.memory) {
     scriptInstance.device = this.device;
     this.queue.push(scriptInstance);
-    console.log(scriptInstance.device);
   }
 };
