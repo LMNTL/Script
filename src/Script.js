@@ -21,7 +21,30 @@ Script.prototype.instance = function(parameters) {
     script: this,
     variables: variables
   });
+};
+
+Script.prototype.step = function(instance) {
+  if(!instance.sub) {
+    instance.goSub();
+    instance.sub.step();
+  } else if(instance.sub.complete) {
+    var assignTo = this.instructions[instance.counter].assignTo
+    if(assignTo) {
+      instance.variables[assignTo.name] = instance.sub.result;
     }
+    instance.counter ++;
+
+    if(instance.counter > this.instructions.length) {
+      instance.complete = true;
+      return;
+    } else {
+      instance.goSub();
+      instance.sub.step();
+    }
+  } else {
+    instance.sub.step();
+  }
+};
 
 new Script({
   name: 'displayText',

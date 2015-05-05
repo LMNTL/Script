@@ -15,4 +15,31 @@ describe("Script", function() {
     game.step();
     expect(device.gpu.displaying).toEqual('success!');
   });
+  it("should run composite", function() {
+    var script = new Script({
+      name: 'displayFromFile',
+      parameters: [{name: 'A', type: 'filePath'}],
+      instructions: [
+        { script: "file",
+          parameters: [{
+            type: "variable", 
+            variable: "A"
+          }],
+          assignTo: {name: "B", type: "file"}
+        },
+        { script: "displayFile",
+          parameters: [
+            { type: "variable", 
+              variable: "B"
+            }
+          ]
+        }
+      ]
+    });
+    device.disk.root.index = 'success!';
+    device.cpu.enqueue(script.instance(['/index']));
+    game.step();
+    game.step();
+    expect(device.gpu.displaying).toEqual('success!');
+  });
 });
