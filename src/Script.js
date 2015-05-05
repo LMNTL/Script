@@ -14,14 +14,14 @@ Script.get = function(name) {
 };
 
 Script.prototype.instance = function(parameters) {
-	var variables = _.zipObject(_.map(_.zip(parameters, this.parameters), function(param){
-		return [param[1].name, param[0]];
-	}));
-	return new ScriptInstance({
-		script: this,
-		variables: variables
-	});
-}
+  var variables = _.zipObject(_.map(_.zip(parameters, this.parameters), function(param){
+    return [param[1].name, param[0]];
+  }));
+  return new ScriptInstance({
+    script: this,
+    variables: variables
+  });
+    }
 
 new Script({
   name: 'displayText',
@@ -37,6 +37,24 @@ new Script({
   parameters: [{name: 'A', type: 'player'}],
   step: function(instance) {
     instance.device.changeOwner(instance.variables['A']);
+    instance.complete = true;
+  }
+});
+
+new Script({
+  name: 'displayFile',
+  parameters: [{name: 'A', type: 'file'}],
+  step: function(instance) {
+    instance.device.gpu.display(instance.variables['A']);
+    instance.complete = true;
+  }
+});
+
+new Script({
+  name: 'file',
+  parameters: [{name: 'A', type: 'filePath'}],
+  step: function(instance) {
+    instance.result = instance.device.disk.get(instance.variables['A']);
     instance.complete = true;
   }
 });

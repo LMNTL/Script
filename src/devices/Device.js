@@ -7,6 +7,7 @@ function Device(config) {
   this.cpu = new CPU(this, config.cpu);
   this.nic = new NIC(this, config.nic);
   this.gpu = new GPU(this, config.gpu);
+  this.disk = new Disk(this, config.disk);
 }
 
 Device.prototype.innerStep = function(duration) {
