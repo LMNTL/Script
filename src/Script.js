@@ -110,3 +110,11 @@ new Script({
     instance.complete = true;
   }
 });
+
+new Script({
+  name: 'repeat',
+  parameters: [],
+  step: function(instance) {
+    instance.instruction.blocks[0].step(instance);
+  }
+});

@@ -25,7 +25,7 @@ ScriptInstance.prototype.goSub = function() {
         return parameter.literal;
     }
   });
-  console.log(this.variables, instruction.parameters, parameters);
   this.sub = script.instance(parameters);
   this.sub.device = this.device;
+  this.sub.instruction = instruction;
 };
