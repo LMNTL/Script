@@ -11,7 +11,7 @@ describe("CPU", function() {
   });
 
   it("should queue scripts", function() {
-    var scriptInstance = script.instance(['meow']);
+    var scriptInstance = script.instance({'A': 'meow'});
     device.cpu.enqueue(scriptInstance);
     expect(device.cpu.queue[0]).toEqual(scriptInstance);
     expect(device.cpu.queue[0].device).toEqual(device);
@@ -19,26 +19,26 @@ describe("CPU", function() {
     expect(device.cpu.queue.length).toEqual(0);
   });
 
-  // it("should complete scripts", function() {
-  //   var script = Script.get('displayText');
-  //   device.cpu.enqueue(script.instance(['Script done!']));
-  //   game.step();
-  //   expect(device.gpu.displaying).toEqual('Script done!');
-  // });
+  it("should complete scripts", function() {
+    var script = Script.get('displayText');
+    device.cpu.enqueue(script.instance({'A': 'Script done!'}));
+    game.step();
+    expect(device.gpu.displaying).toEqual('Script done!');
+  });
 
-  // it("should have a processing speed", function() {
-  //   device.cpu.speed = 2;
-  //   device.cpu.enqueue(script.instance(['meow']));
-  //   device.cpu.enqueue(script.instance(['meow']));
-  //   game.step();
-  //   expect(device.cpu.queue.length).toEqual(0);
-  // });
+  it("should have a processing speed", function() {
+    device.cpu.speed = 2;
+    device.cpu.enqueue(script.instance({'A': 'meow'}));
+    device.cpu.enqueue(script.instance({'A': 'meow'}));
+    game.step();
+    expect(device.cpu.queue.length).toEqual(0);
+  });
 
   it("should have a memory capacity", function() {
     device.cpu.memory = 2;
-    device.cpu.enqueue(script.instance(['meow']));
-    device.cpu.enqueue(script.instance(['meow']));
-    device.cpu.enqueue(script.instance(['meow']));
+    device.cpu.enqueue(script.instance({'A': 'meow'}));
+    device.cpu.enqueue(script.instance({'A': 'meow'}));
+    device.cpu.enqueue(script.instance({'A': 'meow'}));
     expect(device.cpu.queue.length).toEqual(2);
   });
 });
