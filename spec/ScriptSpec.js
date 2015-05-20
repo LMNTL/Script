@@ -14,33 +14,31 @@ describe("Script", function() {
     game.step();
     expect(device.gpu.displaying).toEqual('success!');
   });
-  // it("should run composite", function() {
-  //   var script = new Script({
-  //     name: 'displayFromFile',
-  //     parameters: [{name: 'A', type: 'filePath'}],
-  //     instructions: [
-  //       { script: "file",
-  //         parameters: [{
-  //           type: "variable", 
-  //           variable: "A"
-  //         }],
-  //         assignTo: {name: "B", type: "file"}
-  //       },
-  //       { script: "displayFile",
-  //         parameters: [
-  //           { type: "variable", 
-  //             variable: "B"
-  //           }
-  //         ]
-  //       }
-  //     ]
-  //   });
-  //   device.disk.root.index = 'success!';
-  //   device.cpu.enqueue(script.instance(['/index']));
-  //   game.step();
-  //   game.step();
-  //   expect(device.gpu.displaying).toEqual('success!');
-  // });
+  it("should run composite", function() {
+    var block = new Block([
+      new Instruction({ script: Script.get("file"),
+        parameters: {
+          'A': {
+            'type': 'literal',
+            'literal': '/index'
+          }
+        },
+        assignTo: {name: "B", type: "file"}
+      }),
+      new Instruction({ script: Script.get("displayFile"),
+        parameters: {
+          'A': { type: "variable", 
+            variable: "B"
+          }
+        }
+      })
+    ]);
+    device.disk.root.index = 'success!';
+    device.cpu.enqueue(block);
+    game.step();
+    game.step();
+    expect(device.gpu.displaying).toEqual('success!');
+  });
   // it("should be repeatable", function() {
   //   var script = new Script({
   //     name: 'displayOnPacket',
