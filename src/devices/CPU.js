@@ -32,9 +32,9 @@ CPU.prototype.stepCore = function() {
   }
 };
 
-CPU.prototype.enqueue = function(scriptInstance) {
+CPU.prototype.enqueue = function(instruction) {
   if(this.queue.length < this.memory) {
-    scriptInstance.device = this.device;
-    this.queue.push(scriptInstance);
+    instruction.setDevice(this.device);
+    this.queue.push(instruction);
   }
 };
