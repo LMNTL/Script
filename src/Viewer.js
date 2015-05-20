@@ -123,17 +123,16 @@ $(document).ready(function() {
 
   player = [
     new Player({
-      device: device[1],
+      primaryDevice: device[1],
       deck: [
         new Script({
           name: 'DoS Attack',
-          complete: function(computer, script) {
-            computer.nic.send(new Packet({
+          step: function(instruction) {
+            instruction.device.nic.send(new Packet({
               destination: device[4].nic.ip,
               protocol: 'request',
               data: '/'
             }));
-            computer.cpu.enqueue(script);
           }
         })
       ]
@@ -155,59 +154,90 @@ $(document).ready(function() {
   device[5].nic.connectTo(device[3]);
   device[6].nic.connectTo(device[3]);
 
-  var serverScript = new Script({
-    complete: function(server, script) {
-      server.cpu.events.on("packet", function(request) {
-        if(request.protocol == 'request') {
-          server.cpu.enqueue(new Script({
-            complete: function() {
-              server.nic.send(new Packet({
-                destination: request.source,
-                protocol: 'response',
-                data: script.data.response[request.data]
-              }));
-            }
-          }));
+  var serverScript = new Instruction({
+    script: Script.get('repeat'),
+    blocks: [new Block([
+      new Instruction({
+        script: Script.get("waitForPacket"),
+        assignTo: {name: "A", type: "packet"}
+      }),
+      new Instruction({
+        script: Script.get("file"),
+        parameters: {'A': {
+          type: "variable", 
+          variable: "A",
+          dereference: "data"
+        }},
+        assignTo: {name: "B", type: "file"}
+      }),
+      new Instruction({
+        script: Script.get("sendPacket"),
+        parameters: {
+          'A': { type: "variable", 
+            variable: "A",
+            dereference: "source"
+          },
+          'B': { type: "literal", 
+            literal: "response"
+          }, 
+          'C': { type: "variable", 
+            variable: "B"
+          }
         }
-      });
-    },
-    data: {
-      response: {
-        '/': 'Welcome to Globa Search!'
-      }
-    }
+      })
+    ])]
   });
 
   device[4].cpu.enqueue(serverScript);
+  device[4].disk.root.index = 'Welcome to Globa Search!';
 
-  var browserScript = new Script({
-    complete: function(computer) {
-      computer.cpu.events.on("packet", function(response) {
-        if(response.protocol == 'response') {
-          computer.cpu.enqueue(new Script({
-            complete: function() {
-              computer.gpu.display(response.data);
+
+  _.each([0, 5, 6], function(number) {
+
+    var browserScript = new Instruction({
+      script: Script.get('repeat'),
+      blocks: [new Block([
+        new Instruction({
+          script: Script.get("sendPacket"),
+          parameters: {
+            'A': { type: "literal", 
+              literal: '4'
+            },
+            'B': { type: "literal", 
+              literal: "request"
+            }, 
+            'C': { type: "literal", 
+              literal: "/index"
             }
           }
-         ));
-      	}
-    	});
-    }
-  });
-  var browserRequestScript = new Script({
-  	complete: function(computer) {
-      computer.nic.send(new Packet({
-        destination: device[4].nic.ip,
-        protocol: 'request',
-        data: '/'
-      }));
-    }
-  });
+        }),
+        new Instruction({
+          script: Script.get("waitForPacket"),
+          assignTo: {name: "A", type: "packet"}
+        }),
+        new Instruction({
+          script: Script.get("displayFile"),
+          parameters: {'A': {
+            type: "variable", 
+            variable: "A",
+            dereference: "data"
+          }}
+        })
+      ])]
+    });
 
-  device[0].cpu.enqueue(browserScript);
-  device[5].cpu.enqueue(browserScript);
-  device[6].cpu.enqueue(browserScript);
-  device[1].cpu.enqueue(browserScript);
+    device[number].cpu.enqueue(browserScript);
+
+  });
+  // var browserRequestScript = new Script({
+  // 	complete: function(computer) {
+  //     computer.nic.send(new Packet({
+  //       destination: device[4].nic.ip,
+  //       protocol: 'request',
+  //       data: '/'
+  //     }));
+  //   }
+  // });
 
 	var canvas = document.getElementById('canvas');
 
@@ -218,7 +248,7 @@ $(document).ready(function() {
     _.each(player[0].deck, function(script, index) {
       if (y > canvas.height - 70
           && x > 35 + index * 35 && x < 35 + 80 + index * 35) {
-        player[0].run(script);
+        player[0].run(script.instance({}));
       }
     });
   }, false);
@@ -234,15 +264,15 @@ $(document).ready(function() {
 	  		game.step(1);
 	  		simStep ++;
 	  		//if(simStep % 2 == 0) {
-	  			if(device[0].cpu.queue.length < 2) {
-	  				device[0].cpu.enqueue(browserRequestScript);
-	  			}
-          if(device[5].cpu.queue.length < 2) {
-            device[5].cpu.enqueue(browserRequestScript);
-          }
-          if(device[6].cpu.queue.length < 2) {
-            device[6].cpu.enqueue(browserRequestScript);
-          }
+	  			// if(device[0].cpu.queue.length < 2) {
+	  			// 	device[0].cpu.enqueue(browserRequestScript);
+	  			// }
+      //     if(device[5].cpu.queue.length < 2) {
+      //       device[5].cpu.enqueue(browserRequestScript);
+      //     }
+      //     if(device[6].cpu.queue.length < 2) {
+      //       device[6].cpu.enqueue(browserRequestScript);
+      //     }
           // while(device[1].cpu.queue.length < 2) {
           //   device[1].cpu.enqueue(browserRequestScript);
           // }
