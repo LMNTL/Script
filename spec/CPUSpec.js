@@ -10,17 +10,14 @@ describe("CPU", function() {
     game.devices.push(device);
   });
 
-  // it("should queue scripts", function() {
-  //   script.runtime = 2;
-  //   var script2 = Script.get("displayText");
-  //   var scriptInstance1 = script.instance(['meow'])
-  //   device.cpu.enqueue(scriptInstance1);
-  //   expect(device.cpu.queue[0]).toEqual(scriptInstance1);
-  //   scriptInstance2 = script2.instance(['quack'])
-  //   device.cpu.enqueue(scriptInstance2);
-  //   game.step();
-  //   expect(device.cpu.active).toEqual(scriptInstance2);
-  // });
+  it("should queue scripts", function() {
+    var scriptInstance = script.instance(['meow']);
+    device.cpu.enqueue(scriptInstance);
+    expect(device.cpu.queue[0]).toEqual(scriptInstance);
+    expect(device.cpu.queue[0].device).toEqual(device);
+    game.step();
+    expect(device.cpu.queue.length).toEqual(0);
+  });
 
   // it("should complete scripts", function() {
   //   var script = Script.get('displayText');
