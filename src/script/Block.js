@@ -10,25 +10,32 @@ function Block(instructions) {
 }
 
 Block.prototype.step = function() {
-  if (this.counter > this.instructions.length) {
-    this.complete = true;
+  if (this.complete) {
     return;
   }
 
-  if (this.instructions[this.counter].complete) {
-    this.counter ++;
-    if (this.counter > this.instructions.length) {
-      this.complete = true;
-      return;
-    } 
-  }
-
   this.instructions[this.counter].step();
+  
+  if (this.instructions[this.counter].complete) {
+    if (this.counter >= this.instructions.length - 1) {
+      this.complete = true;
+    } else {
+      this.counter ++;
+    }
+  }
 };
 
 Block.prototype.setDevice = function(device) {
   this.device = device;
   _.each(this.instructions, function(instruction) {
     instruction.setDevice(device);
+  });
+};
+
+Block.prototype.reset = function() {
+  this.counter = 0;
+  this.complete = false;
+  _.each(this.instructions, function(instruction) {
+    instruction.reset();
   });
 };

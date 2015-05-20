@@ -4,7 +4,7 @@ function Instruction(config) {
 }
 
 Instruction.prototype.step = function() {
-  if(!this.context && this.parameters) {
+  if(this.parameters) {
     var xthis = this;
     var contextMap = _.mapValues(this.parameters, function(parameter) {
       switch(parameter.type) {
@@ -30,4 +30,18 @@ Instruction.prototype.step = function() {
 
 Instruction.prototype.setDevice = function(device) {
   this.device = device;
+  if(this.blocks) {
+    _.each(this.blocks, function(block) {
+      block.setDevice(device);
+    });
+  }
+};
+
+Instruction.prototype.reset = function() {
+  this.complete = false;
+  if(this.blocks) {
+    _.each(this.blocks, function(block) {
+      block.reset();
+    });
+  }
 };

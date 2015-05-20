@@ -91,6 +91,10 @@ new Script({
   name: 'repeat',
   parameters: [],
   step: function(instruction) {
-    instruction.instruction.blocks[0].step(instruction);
+    var block = instruction.blocks[0];
+    if(block.complete) {
+      block.reset();
+    }
+    block.step();
   }
 });

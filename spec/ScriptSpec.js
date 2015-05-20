@@ -39,35 +39,35 @@ describe("Script", function() {
     game.step();
     expect(device.gpu.displaying).toEqual('success!');
   });
-  // it("should be repeatable", function() {
-  //   var script = new Script({
-  //     name: 'displayOnPacket',
-  //     instructions: [
-  //       { script: "repeat",
-  //         blocks: [
-  //           new Script({instructions: [
-  //             { script: "waitForPacket",
-  //               assignTo: {name: "A", type: "packet"}
-  //             },
-  //             { script: "displayFile",
-  //               parameters: [{
-  //                 type: "variable", 
-  //                 variable: "A",
-  //                 dereference: "data"
-  //               }]
-  //             }
-  //           ]})
-  //         ]
-  //       }
-  //     ]
-  //   });
-  //   device.cpu.enqueue(script.instance([]));
-  //   device.nic.pendingPackets.push(new Packet({data: 'step1'}));
-  //   game.step();
-  //   expect(device.gpu.displaying).toEqual('step1');
+  it("should be repeatable", function() {
+    var instruction = new Instruction({
+      script: Script.get("repeat"),
+      blocks: [new Block([
+        new Instruction({
+          script: Script.get("waitForPacket"),
+          assignTo: {name: "A", type: "packet"}
+        }),
+        new Instruction({
+          script: Script.get("displayFile"),
+          parameters: {
+            'A': {
+              type: "variable", 
+              variable: "A",
+              dereference: "data"
+            }
+          }
+        })
+      ])]
+    });
+    device.cpu.enqueue(instruction);
+    device.nic.pendingPackets.push(new Packet({data: 'step1'}));
+    game.step();
+    game.step();
+    expect(device.gpu.displaying).toEqual('step1');
 
-  //   device.nic.pendingPackets.push(new Packet({data: 'step2'}));
-  //   game.step();
-  //   expect(device.gpu.displaying).toEqual('step2');
-  // });
+    device.nic.pendingPackets.push(new Packet({data: 'step2'}));
+    game.step();
+    game.step();
+    expect(device.gpu.displaying).toEqual('step2');
+  });
 });
