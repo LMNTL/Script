@@ -79,9 +79,9 @@ new Script({
   ],
   step: function(instruction) {
     instruction.device.nic.send(new Packet({
-      destination: instruction.variables['A'],
-      protocol: instruction.variables['B'],
-      data: instruction.variables['C']
+      destination: instruction.context['A'],
+      protocol: instruction.context['B'],
+      data: instruction.context['C']
     }));
     instruction.complete = true;
   }
