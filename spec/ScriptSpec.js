@@ -9,11 +9,7 @@ describe("Script", function() {
   });
 
   it("should run", function() {
-    var instruction = new Instruction({
-      script: Script.get("displayText"),
-      context: new Context({'A': 'success!'})
-    });
-    device.cpu.enqueue(instruction);
+    device.cpu.enqueue(Script.get("displayText").instance({'A': 'success!'}));
     expect(device.cpu.queue[0].context['A']).toEqual('success!');
     game.step();
     expect(device.gpu.displaying).toEqual('success!');

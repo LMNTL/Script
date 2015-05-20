@@ -15,13 +15,6 @@ describe("Player", function() {
     });
     device.owner = player;
   });
-
-  it("should run scripts", function() {
-    var script = Script.get("displayText");
-    player.run(script.instance(['success!']));
-    game.step();
-    expect(device.gpu.displaying).toEqual('success!');
-  });
   
   it("should be running an admin device", function () {
     expect(player.primaryDevice.owner).toEqual(player);

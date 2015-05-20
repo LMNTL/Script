@@ -18,7 +18,7 @@ Script.prototype.step = function(instruction) {
 Script.prototype.instance = function(parameters) {
   return new Instruction({
     script: this,
-    context: new Context({'A': 'success!'})
+    context: new Context(parameters)
   });
 };
 
@@ -26,7 +26,6 @@ new Script({
   name: 'displayText',
   parameters: [{name: 'A', type: 'text'}],
   step: function(instruction) {
-    console.log(instruction.context);
     instruction.device.gpu.display(instruction.context['A']);
     instruction.complete = true;
   }
