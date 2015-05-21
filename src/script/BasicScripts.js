@@ -77,3 +77,27 @@ new Script({
     }
   }
 });
+
+new Script({
+  name: 'timeout',
+  parameters: [
+    {name: 'A', type: 'number'}
+  ],
+  step: function(pointer) {
+    pointer.stepBlock(0);
+
+    if(pointer.blockPointer.complete) {
+      pointer.complete = true;
+    }
+
+    if(_.isUndefined(pointer.context['tics'])) {
+      pointer.context['tics'] = 0;
+    }
+
+    pointer.context['tics'] ++;
+
+    if(pointer.context['tics'] > pointer.context['A']) {
+      pointer.complete = true;
+    }
+  }
+});

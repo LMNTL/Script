@@ -106,4 +106,51 @@ describe("Script", function() {
     expect(device.gpu.displaying).toEqual('step1');
     expect(device2.gpu.displaying).toEqual('step2');
   });
+  it("should timeout.", function() {
+    var script = new Script({
+      name: 'displayOnPacket',
+      instruction: new Block([
+        new Instruction({
+          script: Script.get("timeout"),
+          parameters: {
+            'A': {
+              type: "literal", 
+              literal: 100
+            }
+          },
+          blocks: [new Block([
+            new Instruction({
+              script: Script.get("waitForPacket"),
+              assignTo: {name: "A", type: "packet"}
+            }),
+            new Instruction({
+              script: Script.get("displayFile"),
+              parameters: {
+                'A': {
+                  type: "variable", 
+                  variable: "A",
+                  dereference: "data"
+                }
+              }
+            })
+          ])]
+        }),
+        new Instruction({
+          script: Script.get("displayText"),
+          parameters: {
+            'A': {
+              type: "literal", 
+              literal: "error: request timeout"
+            }
+          }
+        })
+      ])
+    });
+    device.cpu.enqueue(script.instance());
+
+    for(var i = 0; i < 150; i ++) {
+      game.step();
+    }
+    expect(device.gpu.displaying).toEqual('error: request timeout');
+  });
 });
