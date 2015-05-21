@@ -16,10 +16,15 @@ Script.prototype.step = function(pointer) {
 };
 
 Script.prototype.instance = function(parameters) {
-  return new InstructionPointer({
-    instruction: new Instruction({
+  var instruction = this.instruction;
+  if(_.isUndefined(instruction)) {
+    instruction = new Instruction({
       script: this
-    }),
+    });
+  }
+
+  return new InstructionPointer({
+    instruction: instruction,
     context: new Context(parameters)
   });
 };

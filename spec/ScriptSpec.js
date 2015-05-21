@@ -70,38 +70,40 @@ describe("Script", function() {
     game.step();
     expect(device.gpu.displaying).toEqual('step2');
   });
-  // it("should support instruction scripts.", function() {
-  //   var script = new Script({
-  //     name: 'displayOnPacket',
-  //     instruction: {
-  //       script: Script.get("repeat"),
-  //       blocks: [new Block([
-  //         new Instruction({
-  //           script: Script.get("waitForPacket"),
-  //           assignTo: {name: "A", type: "packet"}
-  //         }),
-  //         new Instruction({
-  //           script: Script.get("displayFile"),
-  //           parameters: {
-  //             'A': {
-  //               type: "variable", 
-  //               variable: "A",
-  //               dereference: "data"
-  //             }
-  //           }
-  //         })
-  //       ])]
-  //     }
-  //   });
-  //   device.cpu.enqueue(script.instance({}));
-  //   device.nic.pendingPackets.push(new Packet({data: 'step1'}));
+  it("should support instructions.", function() {
+    var script = new Script({
+      name: 'displayOnPacket',
+      instruction: {
+        script: Script.get("repeat"),
+        blocks: [new Block([
+          new Instruction({
+            script: Script.get("waitForPacket"),
+            assignTo: {name: "A", type: "packet"}
+          }),
+          new Instruction({
+            script: Script.get("displayFile"),
+            parameters: {
+              'A': {
+                type: "variable", 
+                variable: "A",
+                dereference: "data"
+              }
+            }
+          })
+        ])]
+      }
+    });
+    device.cpu.enqueue(script.instance());
+    device.nic.pendingPackets.push(new Packet({data: 'step1'}));
 
-  //   var device2 = new Device({});
-  //   device2.cpu.enqueue(script.instance({}));
-  //   device2.nic.pendingPackets.push(new Packet({data: 'step2'}));
-  //   game.step();
-  //   game.step();
-  //   expect(device.gpu.displaying).toEqual('step1');
-  //   expect(device2.gpu.displaying).toEqual('step2');
-  // });
+    var device2 = new Device({});
+    device2.cpu.enqueue(script.instance());
+    device2.nic.pendingPackets.push(new Packet({data: 'step2'}));
+    game.devices.push(device2);
+
+    game.step();
+    game.step();
+    expect(device.gpu.displaying).toEqual('step1');
+    expect(device2.gpu.displaying).toEqual('step2');
+  });
 });
