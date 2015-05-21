@@ -7,7 +7,7 @@ function InstructionPointer(config) {
 }
 
 InstructionPointer.prototype.step = function() {
-  if(this.instruction.parameters) {
+  if(this.instruction.parameters && _.isUndefined(this.context)) {
     var xthis = this;
     var contextMap = _.mapValues(this.instruction.parameters, function(parameter) {
       switch(parameter.type) {
@@ -41,10 +41,6 @@ InstructionPointer.prototype.stepBlock = function(number) {
   }
 
   this.blockPointer.step();
-
-  if(this.blockPointer.complete) {
-    this.blockPointer = undefined;
-  }
 };
 
 InstructionPointer.prototype.setDevice = function(device) {

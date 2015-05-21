@@ -14,7 +14,7 @@ describe("Script", function() {
     game.step();
     expect(device.gpu.displaying).toEqual('success!');
   });
-  it("should run composite.", function() {
+  it("should be composable.", function() {
     var block = new Block([
       new Instruction({ script: Script.get("file"),
         parameters: {

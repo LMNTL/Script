@@ -71,5 +71,9 @@ new Script({
   parameters: [],
   step: function(pointer) {
     pointer.stepBlock(0);
+
+    if(pointer.blockPointer.complete) {
+      pointer.blockPointer = undefined;
+    }
   }
 });
