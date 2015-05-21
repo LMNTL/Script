@@ -188,46 +188,42 @@ $(document).ready(function() {
     ])]
   });
 
-  device[4].cpu.enqueue(serverScript);
+  device[4].cpu.enqueue(serverScript.instance());
   device[4].disk.root.index = 'Welcome to Globa Search!';
 
-
-  _.each([0, 5, 6], function(number) {
-
-    var browserScript = new Instruction({
-      script: Script.get('repeat'),
-      blocks: [new Block([
-        new Instruction({
-          script: Script.get("sendPacket"),
-          parameters: {
-            'A': { type: "literal", 
-              literal: '4'
-            },
-            'B': { type: "literal", 
-              literal: "request"
-            }, 
-            'C': { type: "literal", 
-              literal: "/index"
-            }
+  var browserScript = new Instruction({
+    script: Script.get('repeat'),
+    blocks: [new Block([
+      new Instruction({
+        script: Script.get("sendPacket"),
+        parameters: {
+          'A': { type: "literal", 
+            literal: '4'
+          },
+          'B': { type: "literal", 
+            literal: "request"
+          }, 
+          'C': { type: "literal", 
+            literal: "/index"
           }
-        }),
-        new Instruction({
-          script: Script.get("waitForPacket"),
-          assignTo: {name: "A", type: "packet"}
-        }),
-        new Instruction({
-          script: Script.get("displayFile"),
-          parameters: {'A': {
-            type: "variable", 
-            variable: "A",
-            dereference: "data"
-          }}
-        })
-      ])]
-    });
-
-    device[number].cpu.enqueue(browserScript);
-
+        }
+      }),
+      new Instruction({
+        script: Script.get("waitForPacket"),
+        assignTo: {name: "A", type: "packet"}
+      }),
+      new Instruction({
+        script: Script.get("displayFile"),
+        parameters: {'A': {
+          type: "variable", 
+          variable: "A",
+          dereference: "data"
+        }}
+      })
+    ])]
+  });
+  _.each([0, 5, 6], function(number) {
+    device[number].cpu.enqueue(browserScript.instance());
   });
   // var browserRequestScript = new Script({
   // 	complete: function(computer) {

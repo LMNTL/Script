@@ -1,4 +1,6 @@
 
 function Context(config) {
-  _.assign(this, config);
+  if(config) {
+    _.assign(this, config);
+  }
 }

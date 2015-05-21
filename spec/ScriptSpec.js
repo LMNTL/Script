@@ -8,13 +8,13 @@ describe("Script", function() {
     game.devices.push(device);
   });
 
-  it("should run", function() {
+  it("should run.", function() {
     device.cpu.enqueue(Script.get("displayText").instance({'A': 'success!'}));
     expect(device.cpu.queue[0].context['A']).toEqual('success!');
     game.step();
     expect(device.gpu.displaying).toEqual('success!');
   });
-  it("should run composite", function() {
+  it("should run composite.", function() {
     var block = new Block([
       new Instruction({ script: Script.get("file"),
         parameters: {
@@ -34,12 +34,12 @@ describe("Script", function() {
       })
     ]);
     device.disk.root.index = 'success!';
-    device.cpu.enqueue(block);
+    device.cpu.enqueue(block.instance());
     game.step();
     game.step();
     expect(device.gpu.displaying).toEqual('success!');
   });
-  it("should be repeatable", function() {
+  it("should be repeatable.", function() {
     var instruction = new Instruction({
       script: Script.get("repeat"),
       blocks: [new Block([
@@ -59,7 +59,7 @@ describe("Script", function() {
         })
       ])]
     });
-    device.cpu.enqueue(instruction);
+    device.cpu.enqueue(instruction.instance());
     device.nic.pendingPackets.push(new Packet({data: 'step1'}));
     game.step();
     game.step();
@@ -70,7 +70,7 @@ describe("Script", function() {
     game.step();
     expect(device.gpu.displaying).toEqual('step2');
   });
-  // it("should support instruction scripts", function() {
+  // it("should support instruction scripts.", function() {
   //   var script = new Script({
   //     name: 'displayOnPacket',
   //     instruction: {

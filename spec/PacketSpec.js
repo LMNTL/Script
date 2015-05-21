@@ -93,7 +93,7 @@ describe("Packet", function() {
       ])]
     });
 
-    device[4].cpu.enqueue(serverScript);
+    device[4].cpu.enqueue(serverScript.instance());
     device[4].disk.root.index = 'Welcome to Globa Search!';
 
     var browserScript = new Instruction({
@@ -128,7 +128,7 @@ describe("Packet", function() {
       ])]
     });
 
-    device[0].cpu.enqueue(browserScript);
+    device[0].cpu.enqueue(browserScript.instance());
 
     for (var i = 0; i < 200; i++) {
       game.step();
