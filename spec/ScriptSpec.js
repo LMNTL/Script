@@ -73,7 +73,7 @@ describe("Script", function() {
   it("should support instructions.", function() {
     var script = new Script({
       name: 'displayOnPacket',
-      instruction: {
+      instruction: new Instruction({
         script: Script.get("repeat"),
         blocks: [new Block([
           new Instruction({
@@ -91,7 +91,7 @@ describe("Script", function() {
             }
           })
         ])]
-      }
+      })
     });
     device.cpu.enqueue(script.instance());
     device.nic.pendingPackets.push(new Packet({data: 'step1'}));
