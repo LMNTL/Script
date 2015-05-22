@@ -1,0 +1,1 @@
+git config pre-commit.checks "whitespace, console_log, tabs, merge_conflict, json, jshint, debugger"
